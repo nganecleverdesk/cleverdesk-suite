@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TheCleverDesk Suite</title>
+<meta name="theme-color" content="#fb6a64">
+<style>
+:root{--bg:#fff;--bg-el:#f4f4f5;--bg-card:#fafafa;--bd:#e3e3e6;--tx:#181818;--tx2:#7a7a7e;--ac:#fb6a64;--acd:#e2473f;--green:#2fa873;--orange:#d98a13;--red:#e2473f;--r:14px;}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;height:100%;}
+#app{max-width:760px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom);}
+#topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;background:var(--bg);border-bottom:1px solid var(--bd);}
+.brand{font-weight:800;font-size:17px;color:var(--ac);}
+#companySwitcher{display:flex;align-items:center;gap:8px;}
+.company-logo-mini{width:26px;height:26px;border-radius:7px;object-fit:cover;border:1px solid var(--bd);flex-shrink:0;}
+#companySwitcher select{background:var(--bg-el);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;font-size:14px;max-width:48vw;}
+#tabs{display:flex;gap:3px;padding:8px 10px;background:var(--bg);border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none;}
+#tabs::-webkit-scrollbar{display:none;}
+.tab-btn{flex:0 0 auto;background:none;border:none;color:var(--tx2);font-size:13px;padding:8px 10px;border-radius:10px;cursor:pointer;white-space:nowrap;}
+.tab-btn.active{background:var(--bg-el);color:var(--acd);font-weight:700;box-shadow:inset 0 -2px 0 var(--ac);}
+#content{flex:1;padding:16px;}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;}
+.panel-header h2{margin:0;font-size:19px;}
+.hint{color:var(--tx2);font-size:13px;line-height:1.5;}
+.btn{border:none;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+.btn.primary{background:var(--ac);color:#fff;}.btn.secondary{background:var(--bg-el);color:var(--tx);border:1px solid var(--bd);}
+.btn.ghost{background:none;color:var(--acd);padding-left:0;}.btn.danger{background:rgba(226,71,63,.12);color:var(--red);}
+.btn.small{padding:6px 10px;font-size:12px;}.btn:active{transform:scale(.97);}
+.filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;overflow-x:auto;}
+.chip{background:var(--bg-el);border:1px solid var(--bd);color:var(--tx2);border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer;white-space:nowrap;}
+.chip.active{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600;}
+.list{display:flex;flex-direction:column;gap:10px;}
+.card{background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--r);padding:14px;}
+.card-row{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;}
+.card-title{font-weight:600;font-size:15px;}.card-sub{color:var(--tx2);font-size:12px;margin-top:2px;}
+.badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px;flex-shrink:0;}
+.badge.onboarding{background:rgba(47,168,115,.15);color:var(--green);}
+.badge.offboarding{background:rgba(248,113,113,.15);color:var(--red);}
+.badge.done{background:rgba(148,163,196,.15);color:var(--tx2);}
+.badge.payroll{background:rgba(251,106,100,.15);color:var(--acd);}
+.progress-bar{height:6px;background:var(--bg-el);border-radius:999px;overflow:hidden;margin-top:10px;}
+.progress-fill{height:100%;background:var(--ac);border-radius:999px;transition:width .2s;}
+.empty-state{color:var(--tx2);text-align:center;padding:40px 10px;font-size:14px;}
+.person-header{margin-bottom:16px;}.person-header h2{margin:0 0 4px;}
+.person-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;color:var(--tx2);font-size:13px;}
+.auth-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;}
+.auth-box{width:100%;max-width:360px;background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--r);padding:28px 24px;text-align:center;}
+.auth-logo{font-size:40px;margin-bottom:6px;}.auth-box h2{margin:0 0 6px;color:var(--ac);}
+.auth-box .form-group{text-align:left;margin-top:14px;}
+.auth-error{color:var(--red);font-size:13px;min-height:18px;margin-top:10px;}
+.home-card{display:flex;align-items:center;gap:16px;cursor:pointer;padding:20px;}
+.home-card:active{transform:scale(.98);}
+.home-card-icon{font-size:30px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:var(--bg-el);border-radius:12px;flex-shrink:0;}
+.profile-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd);font-size:13px;}
+.profile-row:last-child{border-bottom:none;}.profile-label{color:var(--tx2);}.profile-value{font-weight:600;}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--bd);}
+.checklist-item:last-child{border-bottom:none;}
+.checklist-item input[type="checkbox"]{width:22px;height:22px;flex-shrink:0;margin-top:1px;accent-color:var(--ac);}
+.checklist-item .item-text{flex:1;font-size:14px;line-height:1.4;}
+.checklist-item.checked .item-text{text-decoration:line-through;color:var(--tx2);}
+.due-tag{font-size:11px;padding:2px 8px;border-radius:999px;white-space:nowrap;}
+.due-tag.overdue{background:rgba(248,113,113,.15);color:var(--red);}
+.due-tag.soon{background:rgba(251,191,36,.15);color:var(--orange);}
+.due-tag.ok{background:rgba(148,163,196,.15);color:var(--tx2);}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:13px;color:var(--tx2);margin-bottom:6px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg-el);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;}
+.form-group textarea{resize:vertical;min-height:70px;}
+.form-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+.template-item-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+.template-item-row input[type="text"]{flex:1;}
+.template-item-row input[type="number"]{width:70px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:100;}
+.modal-box{background:var(--bg-card);border:1px solid var(--bd);border-radius:18px 18px 0 0;width:100%;max-width:760px;max-height:88vh;overflow-y:auto;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom));}
+@media(min-width:600px){.modal-overlay{align-items:center;}.modal-box{border-radius:18px;}}
+.modal-box h3{margin-top:0;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg-el);border:1px solid var(--bd);color:var(--tx);padding:10px 18px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:200;max-width:90vw;text-align:center;}
+#toast.show{opacity:1;}
+.settings-actions{display:flex;flex-direction:column;gap:10px;max-width:320px;}
+.install-hint{margin-top:24px;font-size:12px;color:var(--tx2);line-height:1.6;}
+.icon-btn{background:none;border:none;color:var(--tx2);font-size:16px;cursor:pointer;padding:4px;}
+.company-logo-card{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1px solid var(--bd);flex-shrink:0;}
+.company-logo-placeholder{width:44px;height:44px;border-radius:10px;border:1px dashed var(--bd);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--tx2);}
+.logo-upload-preview{width:72px;height:72px;border-radius:12px;object-fit:cover;border:1px solid var(--bd);margin-bottom:10px;}
+/* === SMARTTASK === */
+.st-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.st-stat-card{background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--r);padding:12px;text-align:center;}
+.st-stat-num{font-size:26px;font-weight:800;color:var(--ac);}
+.st-stat-label{font-size:11px;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.st-task-card{transition:transform .15s;}
+.st-task-card:hover{border-color:var(--ac);}
+.st-done{opacity:.55;}
+.st-strike{text-decoration:line-through;color:var(--tx2)!important;}
+.st-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd);background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:transparent;transition:all .2s;}
+.st-check.checked{background:var(--green);border-color:var(--green);color:#fff;}
+.st-tag{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--bg-el);color:var(--tx2);}
+.st-fab{position:fixed;bottom:24px;right:50%;transform:translateX(50%);max-width:calc(760px - 40px);width:calc(100% - 40px);background:var(--ac);color:#fff;border:none;padding:15px;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(251,106,100,.4);z-index:40;display:none;}
+.st-prio-btns{display:flex;gap:8px;}
+.st-prio-btn{flex:1;padding:9px;border-radius:10px;border:2px solid var(--bd);background:var(--bg-el);color:var(--tx2);cursor:pointer;font-size:13px;font-weight:600;}
+.st-prio-btn.active.high{border-color:var(--red);background:rgba(226,71,63,.1);color:var(--red);}
+.st-prio-btn.active.medium{border-color:var(--orange);background:rgba(217,138,19,.1);color:var(--orange);}
+.st-prio-btn.active.low{border-color:var(--green);background:rgba(47,168,115,.1);color:var(--green);}
+.sync-hint{background:rgba(47,168,115,.08);border:1px solid rgba(47,168,115,.2);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--green);margin:4px 0 10px;}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">⚡</div>
+    <h2>TheCleverDesk Suite</h2>
+    <p class="hint">Connecte-toi pour synchroniser Mac ↔ téléphone.</p>
+    <div class="form-group"><label>Email</label><input type="email" id="authEmail" placeholder="toi@exemple.com"></div>
+    <div class="form-group"><label>Mot de passe</label><input type="password" id="authPassword" placeholder="••••••••"></div>
+    <div id="authError" class="auth-error"></div>
+    <div class="form-actions" style="flex-direction:column">
+      <button class="btn primary" id="authLoginBtn">Se connecter</button>
+      <button class="btn secondary" id="authSignupBtn">Créer un compte</button>
+    </div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--bd)">
+      <button class="btn secondary" id="authLocalBtn" style="width:100%">💾 Utiliser sans compte (données locales)</button>
+      <p class="hint" style="margin-top:8px;font-size:11px;text-align:left">⚠️ Dans le preview Claude, Firebase peut être bloqué. Utilise le mode local pour tester, puis déploie sur Netlify pour la sync Mac ↔ Android.</p>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <nav id="topbar">
+    <div class="brand">⚡ TheCleverDesk</div>
+    <div id="companySwitcher"></div>
+  </nav>
+  <nav id="tabs">
+    <button class="tab-btn active" data-tab="home">Accueil</button>
+    <button class="tab-btn" data-tab="people">Collaborateurs</button>
+    <button class="tab-btn" data-tab="templates">Checklists</button>
+    <button class="tab-btn" data-tab="salary">Salaires</button>
+    <button class="tab-btn" data-tab="smarttask" id="stTabBtn">⚡ SmartTask</button>
+    <button class="tab-btn" data-tab="companies">Sociétés</button>
+    <button class="tab-btn" data-tab="settings">Réglages</button>
+  </nav>
+  <main id="content">
+
+    <!-- HOME -->
+    <section id="tab-home" class="tab-panel active">
+      <div class="panel-header"><h2>Que veux-tu faire ?</h2></div>
+      <div class="list">
+        <div class="card home-card" id="homeGoPeople"><div class="home-card-icon">🧑‍💼</div><div><div class="card-title">Onboarding / Offboarding</div><div class="card-sub">Gérer les arrivées et départs</div></div></div>
+        <div class="card home-card" id="homeGoSalary"><div class="home-card-icon">💰</div><div><div class="card-title">Salaires</div><div class="card-sub">Suivi checklist par période</div></div></div>
+        <div class="card home-card" id="homeGoST"><div class="home-card-icon">⚡</div><div><div class="card-title">SmartTask</div><div class="card-sub">Toutes mes tâches et deadlines</div></div></div>
+      </div>
+    </section>
+
+    <!-- PEOPLE -->
+    <section id="tab-people" class="tab-panel">
+      <div class="panel-header"><button class="btn ghost" id="btnHomeFromPeople">← Accueil</button><button class="btn primary" id="btnNewPerson">+ Nouveau</button></div>
+      <h2>Collaborateurs</h2>
+      <div id="peopleFilters" class="filters">
+        <button class="chip active" data-filter="all">Tous</button>
+        <button class="chip" data-filter="onboarding">Arrivées</button>
+        <button class="chip" data-filter="offboarding">Départs</button>
+        <button class="chip" data-filter="done">Terminés</button>
+      </div>
+      <div id="peopleList" class="list"></div>
+    </section>
+
+    <!-- PERSON DETAIL -->
+    <section id="tab-personDetail" class="tab-panel">
+      <div class="panel-header"><button class="btn ghost" id="btnBackToPeople">← Retour</button></div>
+      <div id="personDetailContent"></div>
+    </section>
+
+    <!-- TEMPLATES -->
+    <section id="tab-templates" class="tab-panel">
+      <div class="panel-header"><h2>Modèles de checklist</h2><button class="btn primary" id="btnNewTemplate">+ Nouveau modèle</button></div>
+      <p class="hint">Modèles liés à la société sélectionnée en haut.</p>
+      <div id="templatesList" class="list"></div>
+    </section>
+
+    <!-- TEMPLATE EDIT -->
+    <section id="tab-templateEdit" class="tab-panel">
+      <div class="panel-header"><button class="btn ghost" id="btnBackToTemplates">← Retour</button></div>
+      <div id="templateEditContent"></div>
+    </section>
+
+    <!-- SALARY -->
+    <section id="tab-salary" class="tab-panel">
+      <div class="panel-header"><button class="btn ghost" id="btnHomeFromSalary">← Accueil</button><button class="btn primary" id="btnNewPeriod">+ Nouvelle période</button></div>
+      <h2>Salaires</h2>
+      <div id="salaryList" class="list"></div>
+    </section>
+
+    <!-- SALARY PERIOD DETAIL -->
+    <section id="tab-salaryPeriodDetail" class="tab-panel">
+      <div class="panel-header"><button class="btn ghost" id="btnBackToSalary">← Retour</button></div>
+      <div id="salaryPeriodDetailContent"></div>
+    </section>
+
+    <!-- SMARTTASK -->
+    <section id="tab-smarttask" class="tab-panel">
+      <div class="panel-header">
+        <h2>⚡ SmartTask</h2>
+        <button class="btn secondary small" onclick="stOpenAiImport()">🤖 Importer via IA</button>
+      </div>
+      <div class="st-stats">
+        <div class="st-stat-card"><div class="st-stat-num" id="stStatTotal">0</div><div class="st-stat-label">Total</div></div>
+        <div class="st-stat-card"><div class="st-stat-num" id="stStatDone" style="color:var(--green)">0</div><div class="st-stat-label">Faites</div></div>
+        <div class="st-stat-card"><div class="st-stat-num" id="stStatOverdue" style="color:var(--red)">0</div><div class="st-stat-label">En retard</div></div>
+      </div>
+      <div class="filters" id="stFilters">
+        <button class="chip active" data-sf="all">Toutes</button>
+        <button class="chip" data-sf="today">Aujourd'hui</button>
+        <button class="chip" data-sf="overdue">⚠️ En retard</button>
+        <button class="chip" data-sf="hr">📋 RH</button>
+        <button class="chip" data-sf="high">🔴 Urgentes</button>
+        <button class="chip" data-sf="done">✅ Terminées</button>
+      </div>
+      <div id="stTaskList" class="list"></div>
+      <div style="height:80px"></div>
+    </section>
+
+    <!-- COMPANIES -->
+    <section id="tab-companies" class="tab-panel">
+      <div class="panel-header"><h2>Sociétés</h2><button class="btn primary" id="btnNewCompany">+ Nouvelle société</button></div>
+      <div id="companiesList" class="list"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="tab-settings" class="tab-panel">
+      <h2>Réglages & sauvegarde</h2>
+      <div class="settings-actions">
+        <button class="btn primary" id="btnExport">⬇️ Exporter sauvegarde (.json)</button>
+        <label class="btn secondary" for="importFile">⬆️ Importer sauvegarde<input type="file" id="importFile" accept="application/json" style="display:none"></label>
+        <button class="btn secondary" id="btnNotif">🔔 Activer les notifications push</button>
+        <button class="btn danger" id="btnResetAll">🗑️ Tout réinitialiser</button>
+      </div>
+      <h2 style="margin-top:28px">Synchronisation</h2>
+      <div class="card"><div class="card-sub" id="syncStatusText">—</div></div>
+      <div class="settings-actions" style="margin-top:12px"><button class="btn secondary" id="btnLogout">Se déconnecter</button></div>
+      <div id="installHint" class="install-hint"></div>
+    </section>
+  </main>
+</div>
+
+<button class="st-fab" id="stFab" onclick="stOpenNew()">+ Nouvelle tâche</button>
+<div id="modalRoot"></div>
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+if(!firebase.apps.length){firebase.initializeApp({
+  apiKey:"AIzaSyCn2tqcWC5RS4tjCJFZf6aeNMAwDhNKHNA",
+  authDomain:"cleverdesk-rh.firebaseapp.com",
+  projectId:"cleverdesk-rh",
+  storageBucket:"cleverdesk-rh.firebasestorage.app",
+  messagingSenderId:"576386279930",
+  appId:"1:576386279930:web:cd6d9be854a55587735c43"
+});}
+
+// ── STORAGE ──────────────────────────────────────────────
+const STORE_KEY='cleverdesk_v2';
+function loadData(){try{const r=localStorage.getItem(STORE_KEY);if(r)return JSON.parse(r);}catch(e){}return seedData();}
+function saveData(){try{localStorage.setItem(STORE_KEY,JSON.stringify(S.data));}catch(e){console.warn('localStorage indisponible, sync cloud uniquement');}queueCloud();}
+
+// ── CLOUD SYNC ───────────────────────────────────────────
+const sync={uid:null,unsub:null,applying:false,timer:null};
+function setSyncStatus(t){const el=document.getElementById('syncStatusText');if(el)el.textContent=t;}
+function queueCloud(){
+  if(!sync.uid||sync.applying)return;
+  clearTimeout(sync.timer);
+  sync.timer=setTimeout(()=>{
+    firebase.firestore().collection('users').doc(sync.uid).set(S.data)
+      .then(()=>setSyncStatus('Synchronisé · '+new Date().toLocaleTimeString('fr-FR')))
+      .catch(e=>setSyncStatus('Erreur sync: '+e.message));
+  },600);
+}
+function subscribeCloud(uid){
+  sync.uid=uid;
+  const ref=firebase.firestore().collection('users').doc(uid);
+  ref.get().then(snap=>{
+    if(snap.exists){sync.applying=true;S.data=snap.data();migrate();localStorage.setItem(STORE_KEY,JSON.stringify(S.data));sync.applying=false;}
+    else ref.set(S.data);
+    startApp();
+  }).catch(e=>{setSyncStatus('Hors-ligne');startApp();});
+  sync.unsub=ref.onSnapshot(snap=>{
+    if(!snap.exists)return;
+    const inc=JSON.stringify(snap.data());
+    if(inc===JSON.stringify(S.data))return;
+    sync.applying=true;S.data=snap.data();migrate();localStorage.setItem(STORE_KEY,JSON.stringify(S.data));
+    if(S.companyId&&!company(S.companyId))S.companyId=S.data.companies[0]?.id||null;
+    renderAll();sync.applying=false;setSyncStatus('Mis à jour · '+new Date().toLocaleTimeString('fr-FR'));
+  });
+}
+function unsubCloud(){if(sync.unsub)sync.unsub();sync.uid=null;sync.unsub=null;}
+
+// ── UTILS ────────────────────────────────────────────────
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function fmtDate(d){if(!d)return'—';return new Date(d+'T00:00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function addMonths(dateStr,m){const d=new Date(dateStr+'T00:00:00');d.setMonth(d.getMonth()+m);return d;}
+function dueDate(refDate,offsetDays){const d=new Date(refDate+'T00:00:00');d.setDate(d.getDate()+(offsetDays||0));return d;}
+function toISO(d){return d.toISOString().slice(0,10);}
+function monthLabel(mv){const[y,m]=mv.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'});}
+
+// ── SEED DATA ─────────────────────────────────────────────
+function seedData(){
+  const cId=uid(),oId=uid(),fId=uid();
+  return{
+    companies:[{id:cId,name:'Ma société',logoDataUrl:null}],
+    templates:[
+      {id:oId,companyId:cId,type:'onboarding',name:'Checklist arrivée',items:[
+        {id:uid(),text:'Signer / faire signer le contrat de travail',offsetDays:-14},
+        {id:uid(),text:'Demande de permis de travail (si applicable)',offsetDays:-30},
+        {id:uid(),text:'Commander le matériel informatique',offsetDays:-7},
+        {id:uid(),text:'Créer les accès (email, outils, badge)',offsetDays:-2},
+        {id:uid(),text:'Préparer le poste de travail',offsetDays:-1},
+        {id:uid(),text:'Accueil et visite des locaux',offsetDays:0},
+        {id:uid(),text:"Présentation à l'équipe",offsetDays:0},
+        {id:uid(),text:'Remise du règlement du personnel',offsetDays:0},
+        {id:uid(),text:'Affiliation AVS (caisse de compensation)',offsetDays:3},
+        {id:uid(),text:'Affiliation LPP (caisse de pension)',offsetDays:3},
+        {id:uid(),text:'Affiliation assurance accident (LAA)',offsetDays:3},
+        {id:uid(),text:'Affiliation assurance perte de gain maladie',offsetDays:5},
+        {id:uid(),text:"Point d'intégration à 30 jours",offsetDays:30},
+        {id:uid(),text:"Entretien de fin de période d'essai",offsetDays:75}
+      ]},
+      {id:fId,companyId:cId,type:'offboarding',name:'Checklist départ',items:[
+        {id:uid(),text:'Réception de la démission / notification du licenciement',offsetDays:-30},
+        {id:uid(),text:'Vérifier la durée du préavis et la date de sortie',offsetDays:-28},
+        {id:uid(),text:'Annulation du permis de travail (si applicable)',offsetDays:-3},
+        {id:uid(),text:"Planifier l'entretien de sortie",offsetDays:-5},
+        {id:uid(),text:'Préparer le solde de tout compte',offsetDays:-3},
+        {id:uid(),text:'Récupérer le matériel (PC, badge, clés)',offsetDays:0},
+        {id:uid(),text:'Désactiver les accès et comptes',offsetDays:0},
+        {id:uid(),text:'Sortie AVS — annonce à la caisse de compensation',offsetDays:1},
+        {id:uid(),text:'Sortie LPP — transfert de la prestation de libre passage',offsetDays:1},
+        {id:uid(),text:'Sortie assurance accident (LAA)',offsetDays:1},
+        {id:uid(),text:'Envoyer le certificat de travail',offsetDays:1},
+        {id:uid(),text:"Envoyer l'attestation employeur (caisse chômage)",offsetDays:1},
+        {id:uid(),text:'Solde de tout compte versé',offsetDays:7}
+      ]},
+      {id:uid(),companyId:cId,type:'payroll',name:'Checklist salaire',items:[
+        {id:uid(),text:'Vérifier les heures supplémentaires et absences'},
+        {id:uid(),text:'Vérifier les avances de salaire à déduire'},
+        {id:uid(),text:'Calculer les charges sociales (AVS / LPP / LAA / AC)'},
+        {id:uid(),text:"Calculer l'impôt à la source si applicable"},
+        {id:uid(),text:'Valider les fiches de salaire'},
+        {id:uid(),text:'Envoyer les fiches de salaire aux employés'},
+        {id:uid(),text:'Effectuer les paiements de salaire'},
+        {id:uid(),text:'Déclarer les salaires (caisse de compensation)'}
+      ]}
+    ],
+    payrollPeriods:[],people:[],smarttasks:[],settings:{notif:false}
+  };
+}
+
+// ── STATE ─────────────────────────────────────────────────
+const S={
+  data:loadData(),companyId:null,tab:'home',
+  peopleFilter:'all',personId:null,templateId:null,payrollId:null,
+  stFilter:'all',stEditId:null,stPriority:'medium'
+};
+
+function migrate(){
+  if(!S.data.payrollPeriods)S.data.payrollPeriods=[];
+  if(!S.data.smarttasks)S.data.smarttasks=[];
+  if(!S.data.settings)S.data.settings={notif:false};
+  if(S.data.payrollTemplates){
+    S.data.payrollTemplates.forEach(t=>{S.data.templates.push({id:t.id,companyId:t.companyId,type:'payroll',name:'Checklist salaire',items:t.items});});
+    delete S.data.payrollTemplates;
+  }
+  S.data.companies.forEach(c=>{if(c.logoDataUrl===undefined)c.logoDataUrl=null;});
+}
+
+let started=false;
+function startApp(){
+  if(!S.data.companies.length)S.data=seedData();
+  migrate();localStorage.setItem(STORE_KEY,JSON.stringify(S.data));
+  if(!S.companyId||!company(S.companyId))S.companyId=S.data.companies[0].id;
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('app').style.display='';
+  renderCompanySwitcher();renderAll();
+  setSyncStatus(sync.uid?'Synchronisé':'Hors-ligne');
+  if(started)return;started=true;
+  bindTabs();bindGlobal();bindStFilters();updateStBadge();scheduleReminders();
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function company(id){return S.data.companies.find(c=>c.id===id);}
+function template(id){return S.data.templates.find(t=>t.id===id);}
+function person(id){return S.data.people.find(p=>p.id===id);}
+function tplsFor(cId,type){return S.data.templates.filter(t=>t.companyId===cId&&(!type||t.type===type));}
+function peopleFor(cId){return S.data.people.filter(p=>p.companyId===cId);}
+function periodsFor(cId){return S.data.payrollPeriods.filter(p=>p.companyId===cId);}
+function period(id){return S.data.payrollPeriods.find(p=>p.id===id);}
+function progress(p){if(!p.checklist.length)return 0;return Math.round(p.checklist.filter(i=>i.checked).length/p.checklist.length*100);}
+function payrollProgress(p){const all=[...p.checklist,...p.extras];return all.length?Math.round(all.filter(i=>i.checked).length/all.length*100):0;}
+
+// ── COMPANY SWITCHER ──────────────────────────────────────
+function renderCompanySwitcher(){
+  const el=document.getElementById('companySwitcher');
+  const cur=company(S.companyId);
+  const logo=cur?.logoDataUrl?`<img class="company-logo-mini" src="${cur.logoDataUrl}" alt="">`:'';
+  el.innerHTML=`${logo}<select id="cmpSel">${S.data.companies.map(c=>`<option value="${c.id}"${c.id===S.companyId?' selected':''}>${esc(c.name)}</option>`).join('')}</select>`;
+  document.getElementById('cmpSel').addEventListener('change',e=>{S.companyId=e.target.value;renderAll();});
+}
+
+// ── TABS ──────────────────────────────────────────────────
+function bindTabs(){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+}
+function switchTab(tab){
+  S.tab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('stFab').style.display=tab==='smarttask'?'block':'none';
+  if(tab==='smarttask')renderST();else renderAll();
+}
+function showPanel(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('stFab').style.display='none';
+}
+
+// ── GLOBAL BINDS ─────────────────────────────────────────
+function bindGlobal(){
+  document.getElementById('btnNewPerson').addEventListener('click',openNewPersonModal);
+  document.getElementById('btnNewTemplate').addEventListener('click',openNewTemplateModal);
+  document.getElementById('btnNewCompany').addEventListener('click',openNewCompanyModal);
+  document.getElementById('btnBackToPeople').addEventListener('click',()=>switchTab('people'));
+  document.getElementById('btnBackToTemplates').addEventListener('click',()=>switchTab('templates'));
+  document.getElementById('homeGoPeople').addEventListener('click',()=>switchTab('people'));
+  document.getElementById('homeGoSalary').addEventListener('click',()=>switchTab('salary'));
+  document.getElementById('homeGoST').addEventListener('click',()=>switchTab('smarttask'));
+  document.getElementById('btnHomeFromPeople').addEventListener('click',()=>switchTab('home'));
+  document.getElementById('btnHomeFromSalary').addEventListener('click',()=>switchTab('home'));
+  document.getElementById('btnNewPeriod').addEventListener('click',openNewPeriodModal);
+  document.getElementById('btnBackToSalary').addEventListener('click',()=>switchTab('salary'));
+  document.getElementById('btnExport').addEventListener('click',exportData);
+  document.getElementById('importFile').addEventListener('change',importData);
+  document.getElementById('btnResetAll').addEventListener('click',resetAll);
+  document.getElementById('btnNotif').addEventListener('click',requestNotif);
+  const logoutBtn=document.getElementById('btnLogout');
+  if(logoutBtn)logoutBtn.addEventListener('click',()=>firebase.auth().signOut());
+  document.querySelectorAll('#peopleFilters .chip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('#peopleFilters .chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');S.peopleFilter=chip.dataset.filter;renderPeopleList();
+    });
+  });
+  document.getElementById('installHint').innerHTML='<strong>Installer l\'app :</strong><br>• Mac (Chrome) : icône installation dans la barre d\'adresse.<br>• Android (Chrome) : menu ⋮ → "Installer" ou "Ajouter à l\'écran d\'accueil".';
+}
+
+function renderAll(){
+  renderCompanySwitcher();renderPeopleList();renderTemplatesList();renderCompaniesList();renderSalaryList();
+  if(S.tab==='smarttask')renderST();
+  updateStBadge();
+}
+
+// ── SALARY ────────────────────────────────────────────────
+function renderSalaryList(){
+  const el=document.getElementById('salaryList');if(!el)return;
+  const periods=periodsFor(S.companyId).slice().sort((a,b)=>b.month.localeCompare(a.month));
+  if(!periods.length){el.innerHTML='<div class="empty-state">Aucune période. Crée la première période.</div>';return;}
+  el.innerHTML=periods.map(p=>{const pct=payrollProgress(p);return`<div class="card"><div class="card-row" data-pid="${p.id}"><div><div class="card-title">${esc(cap(monthLabel(p.month)))}</div><div class="card-sub">${p.checklist.length+p.extras.length} point(s)</div></div><span class="badge ${pct===100?'done':'onboarding'}">${pct===100?'Clôturé':pct+'%'}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;}).join('');
+  el.querySelectorAll('[data-pid]').forEach(e=>e.addEventListener('click',()=>openPeriodDetail(e.dataset.pid)));
+}
+function openNewPeriodModal(){
+  const cId=S.companyId;const now=new Date();
+  const dm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const tpls=tplsFor(cId,'payroll');
+  openModal(`<h3>Nouvelle période de salaire</h3>
+    <div class="form-group"><label>Mois</label><input type="month" id="npmMonth" value="${dm}"></div>
+    <div class="form-group"><label>Modèle</label><select id="npmTpl">${tpls.length?tpls.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join(''):'<option value="">Aucun modèle — créer dans Checklists</option>'}</select></div>
+    <div class="form-actions"><button class="btn primary" id="npmSave">Créer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
+  document.getElementById('npmSave').addEventListener('click',()=>{
+    const month=document.getElementById('npmMonth').value;
+    const tId=document.getElementById('npmTpl').value;
+    if(!month)return toast('Indique un mois');
+    if(!tId)return toast('Choisis un modèle');
+    if(S.data.payrollPeriods.some(p=>p.companyId===cId&&p.month===month))return toast('Cette période existe déjà');
+    const tpl=template(tId);
+    const p={id:uid(),companyId:cId,month,templateId:tId,checklist:tpl.items.map(it=>({id:uid(),text:it.text,checked:false})),extras:[]};
+    S.data.payrollPeriods.push(p);saveData();closeModal();renderSalaryList();toast('Période créée');openPeriodDetail(p.id);
+  });
+}
+function openPeriodDetail(id){S.payrollId=id;renderPeriodDetail();showPanel('tab-salaryPeriodDetail');}
+function renderPeriodDetail(){
+  const p=period(S.payrollId);if(!p)return;
+  const pct=payrollProgress(p);const el=document.getElementById('salaryPeriodDetailContent');
+  const clHtml=p.checklist.map(i=>`<div class="checklist-item ${i.checked?'checked':''}"><input type="checkbox" data-ci="${i.id}"${i.checked?' checked':''}><div class="item-text">${esc(i.text)}</div></div>`).join('');
+  const exHtml=p.extras.map(i=>`<div class="checklist-item ${i.checked?'checked':''}"><input type="checkbox" data-ei="${i.id}"${i.checked?' checked':''}><div class="item-text">${esc(i.text)}</div><button class="icon-btn" data-dei="${i.id}">✕</button></div>`).join('');
+  el.innerHTML=`<div class="person-header"><h2>${esc(cap(monthLabel(p.month)))}</h2><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div class="card-sub" style="margin-top:6px">${pct}% complété</div></div>
+    <h3>Checklist type</h3><div class="card">${clHtml||'<div class="empty-state">Aucun point.</div>'}</div>
+    <h3>Points ponctuels</h3><div class="card">${exHtml||'<div class="empty-state">Aucun point ponctuel.</div>'}</div>
+    <div class="form-group" style="margin-top:12px;display:flex;gap:8px"><input type="text" id="newExtra" placeholder="ex: Déduire avance salaire — Jean Martin — 300 CHF" style="flex:1"><button class="btn secondary" id="btnAddEx">+ Ajouter</button></div>
+    <div class="form-actions"><button class="btn danger" id="btnDelPeriod">Supprimer cette période</button></div>`;
+  el.querySelectorAll('[data-ci]').forEach(cb=>cb.addEventListener('change',()=>{const i=p.checklist.find(x=>x.id===cb.dataset.ci);i.checked=cb.checked;saveData();renderPeriodDetail();renderSalaryList();}));
+  el.querySelectorAll('[data-ei]').forEach(cb=>cb.addEventListener('change',()=>{const i=p.extras.find(x=>x.id===cb.dataset.ei);i.checked=cb.checked;saveData();renderPeriodDetail();renderSalaryList();}));
+  el.querySelectorAll('[data-dei]').forEach(b=>b.addEventListener('click',()=>{p.extras=p.extras.filter(i=>i.id!==b.dataset.dei);saveData();renderPeriodDetail();renderSalaryList();}));
+  document.getElementById('btnAddEx').addEventListener('click',()=>{const txt=document.getElementById('newExtra').value.trim();if(!txt)return toast('Décris le point');p.extras.push({id:uid(),text:txt,checked:false});document.getElementById('newExtra').value='';saveData();renderPeriodDetail();renderSalaryList();});
+  document.getElementById('btnDelPeriod').addEventListener('click',()=>{if(!confirm('Supprimer cette période ?'))return;S.data.payrollPeriods=S.data.payrollPeriods.filter(x=>x.id!==p.id);saveData();switchTab('salary');toast('Période supprimée');});
+}
+
+// ── MODAL / TOAST ─────────────────────────────────────────
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function openModal(html){
+  const r=document.getElementById('modalRoot');
+  r.innerHTML=`<div class="modal-overlay" id="mOverlay"><div class="modal-box">${html}</div></div>`;
+  document.getElementById('mOverlay').addEventListener('click',e=>{if(e.target.id==='mOverlay')closeModal();});
+}
+function closeModal(){document.getElementById('modalRoot').innerHTML='';}
+
+// ── PEOPLE ────────────────────────────────────────────────
+function renderPeopleList(){
+  const el=document.getElementById('peopleList');
+  let people=peopleFor(S.companyId);
+  if(S.peopleFilter==='onboarding')people=people.filter(p=>p.type==='onboarding'&&progress(p)<100);
+  else if(S.peopleFilter==='offboarding')people=people.filter(p=>p.type==='offboarding'&&progress(p)<100);
+  else if(S.peopleFilter==='done')people=people.filter(p=>progress(p)===100);
+  people=people.slice().sort((a,b)=>(a.refDate||'').localeCompare(b.refDate||''));
+  if(!people.length){el.innerHTML='<div class="empty-state">Aucun collaborateur dans cette catégorie.</div>';return;}
+  el.innerHTML=people.map(p=>{const pct=progress(p);return`<div class="card"><div class="card-row" data-pp="${p.id}"><div><div class="card-title">${esc(p.name)}</div><div class="card-sub">${p.type==='onboarding'?'Arrivée':'Départ'} le ${fmtDate(p.refDate)}</div></div><span class="badge ${pct===100?'done':p.type}">${pct===100?'Terminé':p.type==='onboarding'?'Arrivée':'Départ'}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;}).join('');
+  el.querySelectorAll('[data-pp]').forEach(e=>e.addEventListener('click',()=>openPersonDetail(e.dataset.pp)));
+}
+
+function openNewPersonModal(){
+  const c=company(S.companyId);
+  const oTpls=tplsFor(c.id,'onboarding');const fTpls=tplsFor(c.id,'offboarding');
+  openModal(`<h3>Nouveau collaborateur</h3>
+    <div class="form-group"><label>Nom</label><input type="text" id="npName" placeholder="ex: Marie Dupont"></div>
+    <div class="form-group"><label>Type</label><select id="npType"><option value="onboarding">Arrivée (onboarding)</option><option value="offboarding">Départ (offboarding)</option></select></div>
+    <div class="form-group"><label id="npDL">Date d'arrivée</label><input type="date" id="npDate"></div>
+    <div id="npOF"><div class="form-group"><label>Durée période d'essai (mois)</label><input type="number" id="npProb" value="3" min="0"></div><div class="form-group"><div class="hint" id="npPPrev"></div></div></div>
+    <div id="npFF" style="display:none"><div class="form-group"><label>Date d'entrée dans l'entreprise</label><input type="date" id="npEntry"></div></div>
+    <div class="form-group"><label>Modèle de checklist</label><select id="npTpl"></select></div>
+    <div class="sync-hint">⚡ Les tâches seront automatiquement synchronisées dans SmartTask avec leurs deadlines et rappels.</div>
+    <div class="form-actions"><button class="btn primary" id="npSave">Créer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
+  function refresh(){
+    const t=document.getElementById('npType').value;
+    document.getElementById('npDL').textContent=t==='onboarding'?"Date d'arrivée":"Date de départ";
+    document.getElementById('npOF').style.display=t==='onboarding'?'block':'none';
+    document.getElementById('npFF').style.display=t==='offboarding'?'block':'none';
+    const list=t==='onboarding'?oTpls:fTpls;
+    document.getElementById('npTpl').innerHTML=list.length?list.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join(''):'<option value="">Aucun modèle</option>';
+    prev();
+  }
+  function prev(){
+    if(document.getElementById('npType').value!=='onboarding')return;
+    const d=document.getElementById('npDate').value;const m=parseInt(document.getElementById('npProb').value)||0;const el=document.getElementById('npPPrev');
+    if(!d){el.textContent="Indique la date d'arrivée pour calculer la fin de période d'essai.";return;}
+    el.textContent=`Fin de période d'essai : ${fmtDate(toISO(addMonths(d,m)))}`;
+  }
+  refresh();
+  document.getElementById('npType').addEventListener('change',refresh);
+  document.getElementById('npDate').addEventListener('input',prev);
+  document.getElementById('npProb').addEventListener('input',prev);
+  document.getElementById('npSave').addEventListener('click',()=>{
+    const name=document.getElementById('npName').value.trim();
+    const type=document.getElementById('npType').value;
+    const refDate=document.getElementById('npDate').value;
+    const tId=document.getElementById('npTpl').value;
+    if(!name)return toast('Indique un nom');
+    if(!refDate)return toast('Indique une date');
+    if(!tId)return toast('Choisis un modèle');
+    const tpl=template(tId);
+    const checklist=tpl.items.map(it=>({id:uid(),text:it.text,offsetDays:it.offsetDays,checked:false}));
+    const prob=type==='onboarding'?(parseInt(document.getElementById('npProb').value)||0):null;
+    const entry=type==='onboarding'?refDate:(document.getElementById('npEntry')?.value||null);
+    const p={id:uid(),companyId:c.id,name,type,refDate,entryDate:entry,probationMonths:prob,templateId:tId,checklist};
+    S.data.people.push(p);saveData();closeModal();renderPeopleList();
+    // ⚡ BRIDGE
+    pushToSmartTask(p,c);
+  });
+}
+
+function openPersonDetail(id){S.personId=id;renderPersonDetail();showPanel('tab-personDetail');}
+function renderPersonDetail(){
+  const p=person(S.personId);if(!p)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const pct=progress(p);
+  const sorted=p.checklist.slice().sort((a,b)=>(a.offsetDays??0)-(b.offsetDays??0));
+  const itemsHtml=sorted.map(item=>{
+    const due=dueDate(p.refDate,item.offsetDays);
+    const diff=Math.round((due-today)/86400000);
+    let cls='ok';if(!item.checked){if(diff<0)cls='overdue';else if(diff<=2)cls='soon';}
+    const lbl=item.checked?'Fait':(diff===0?"Aujourd'hui":diff>0?`J-${diff} (${fmtDate(toISO(due))})`:`Retard ${Math.abs(diff)}j (${fmtDate(toISO(due))})`);
+    return`<div class="checklist-item ${item.checked?'checked':''}"><input type="checkbox" data-iid="${item.id}"${item.checked?' checked':''}><div class="item-text">${esc(item.text)}</div><div class="due-tag ${item.checked?'ok':cls}">${lbl}</div></div>`;
+  }).join('');
+  const stPending=(S.data.smarttasks||[]).filter(t=>t.personId===p.id&&!t.done).length;
+  const stBadge=stPending>0?`<span class="badge onboarding" style="cursor:pointer" onclick="switchTab('smarttask')">⚡ ${stPending} tâche(s) SmartTask</span>`:'';
+  const profRows=[];
+  if(p.entryDate)profRows.push(["Date d'entrée",fmtDate(p.entryDate)]);
+  if(p.type==='onboarding'&&p.entryDate&&p.probationMonths!=null){const e=addMonths(p.entryDate,p.probationMonths);profRows.push([`Fin période d'essai (${p.probationMonths} mois)`,fmtDate(toISO(e))]);}
+  const profHtml=profRows.length?`<div class="card" style="margin-bottom:14px">${profRows.map(([l,v])=>`<div class="profile-row"><span class="profile-label">${esc(l)}</span><span class="profile-value">${esc(v)}</span></div>`).join('')}</div>`:'';
+  const el=document.getElementById('personDetailContent');
+  el.innerHTML=`<div class="person-header"><h2>${esc(p.name)}</h2>
+    <div class="person-meta"><span class="badge ${p.type}">${p.type==='onboarding'?'Arrivée':'Départ'}</span><span>${company(p.companyId)?.name||''}</span><span>${p.type==='onboarding'?'Arrivée':'Départ'} le ${fmtDate(p.refDate)}</span>${stBadge}</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="card-sub" style="margin-top:6px">${pct}% complété</div></div>
+    ${profHtml}<div class="card">${itemsHtml||'<div class="empty-state">Aucune tâche.</div>'}</div>
+    <div class="form-actions">
+      <button class="btn secondary" id="btnResync">⚡ Re-sync SmartTask</button>
+      <button class="btn danger" id="btnDelP">Supprimer</button>
+    </div>`;
+  el.querySelectorAll('[data-iid]').forEach(cb=>cb.addEventListener('change',()=>{
+    const item=p.checklist.find(i=>i.id===cb.dataset.iid);item.checked=cb.checked;
+    const st=(S.data.smarttasks||[]).find(t=>t.personId===p.id&&t.checklistItemId===item.id);
+    if(st)st.done=cb.checked;
+    saveData();renderPersonDetail();renderPeopleList();updateStBadge();
+  }));
+  document.getElementById('btnResync').addEventListener('click',()=>{pushToSmartTask(p,company(p.companyId));renderPersonDetail();});
+  document.getElementById('btnDelP').addEventListener('click',()=>{
+    if(!confirm(`Supprimer ${p.name} ?`))return;
+    S.data.people=S.data.people.filter(x=>x.id!==p.id);
+    S.data.smarttasks=(S.data.smarttasks||[]).filter(t=>t.personId!==p.id);
+    saveData();switchTab('people');toast('Collaborateur supprimé');
+  });
+}
+
+// ── TEMPLATES ─────────────────────────────────────────────
+const TPL_LABELS={onboarding:'Arrivée',offboarding:'Départ',payroll:'Salaire'};
+function renderTemplatesList(){
+  const el=document.getElementById('templatesList');
+  const tpls=tplsFor(S.companyId);
+  if(!tpls.length){el.innerHTML='<div class="empty-state">Aucun modèle. Crée un modèle d\'onboarding, offboarding ou salaire.</div>';return;}
+  el.innerHTML=tpls.map(t=>`<div class="card"><div class="card-row" data-tt="${t.id}"><div><div class="card-title">${esc(t.name)}</div><div class="card-sub">${t.items.length} tâche(s)</div></div><span class="badge ${t.type}">${TPL_LABELS[t.type]||t.type}</span></div></div>`).join('');
+  el.querySelectorAll('[data-tt]').forEach(e=>e.addEventListener('click',()=>openTemplateEdit(e.dataset.tt)));
+}
+function openNewTemplateModal(){
+  openModal(`<h3>Nouveau modèle</h3>
+    <div class="form-group"><label>Nom</label><input type="text" id="ntName" placeholder="ex: Checklist arrivée commercial"></div>
+    <div class="form-group"><label>Type</label><select id="ntType"><option value="onboarding">Onboarding (arrivée)</option><option value="offboarding">Offboarding (départ)</option><option value="payroll">Salaire</option></select></div>
+    <div class="form-actions"><button class="btn primary" id="ntSave">Créer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
+  document.getElementById('ntSave').addEventListener('click',()=>{
+    const name=document.getElementById('ntName').value.trim();const type=document.getElementById('ntType').value;
+    if(!name)return toast('Indique un nom');
+    const t={id:uid(),companyId:S.companyId,type,name,items:[]};S.data.templates.push(t);saveData();closeModal();renderTemplatesList();openTemplateEdit(t.id);
+  });
+}
+function openTemplateEdit(tId){S.templateId=tId;renderTemplateEdit();showPanel('tab-templateEdit');}
+function renderTemplateEdit(){
+  const tpl=template(S.templateId);if(!tpl)return;
+  const isPay=tpl.type==='payroll';const el=document.getElementById('templateEditContent');
+  const itemsHtml=tpl.items.map(item=>`<div class="template-item-row" data-tid="${item.id}"><input type="text" value="${esc(item.text)}" data-f="text" placeholder="Tâche">${isPay?'':`<input type="number" value="${item.offsetDays??0}" data-f="off" title="Jours relatifs à la date (négatif = avant)">`}<button class="icon-btn" data-di>✕</button></div>`).join('');
+  el.innerHTML=`<div class="form-group"><label>Nom</label><input type="text" id="teName" value="${esc(tpl.name)}"></div>
+    <div class="form-group"><label>Type</label><select id="teType"><option value="onboarding"${tpl.type==='onboarding'?' selected':''}>Onboarding</option><option value="offboarding"${tpl.type==='offboarding'?' selected':''}>Offboarding</option><option value="payroll"${tpl.type==='payroll'?' selected':''}>Salaire</option></select></div>
+    <h3>Tâches</h3><p class="hint">${isPay?'Points proposés à chaque période de salaire.':'Jours relatifs à la date de référence (ex: -7 = 7 jours avant, 0 = jour J, 30 = un mois après).'}</p>
+    <div id="teItems">${itemsHtml}</div>
+    <button class="btn secondary" id="teAdd">+ Ajouter une tâche</button>
+    <div class="form-actions"><button class="btn primary" id="teSave">Enregistrer</button><button class="btn danger" id="teDel">Supprimer le modèle</button></div>`;
+  document.getElementById('teAdd').addEventListener('click',()=>{tpl.items.push({id:uid(),text:'',offsetDays:0});renderTemplateEdit();});
+  el.querySelectorAll('[data-di]').forEach(b=>b.addEventListener('click',()=>{const r=b.closest('[data-tid]');tpl.items=tpl.items.filter(i=>i.id!==r.dataset.tid);renderTemplateEdit();}));
+  document.getElementById('teSave').addEventListener('click',()=>{
+    tpl.name=document.getElementById('teName').value.trim()||tpl.name;tpl.type=document.getElementById('teType').value;
+    el.querySelectorAll('.template-item-row').forEach(row=>{const item=tpl.items.find(i=>i.id===row.dataset.tid);if(!item)return;item.text=row.querySelector('[data-f="text"]').value.trim();const off=row.querySelector('[data-f="off"]');if(off)item.offsetDays=parseInt(off.value)||0;});
+    tpl.items=tpl.items.filter(i=>i.text);saveData();switchTab('templates');toast('Modèle enregistré');
+  });
+  document.getElementById('teDel').addEventListener('click',()=>{if(!confirm(`Supprimer "${tpl.name}" ?`))return;S.data.templates=S.data.templates.filter(t=>t.id!==tpl.id);saveData();switchTab('templates');toast('Modèle supprimé');});
+}
+
+// ── COMPANIES ─────────────────────────────────────────────
+function renderCompaniesList(){
+  const el=document.getElementById('companiesList');
+  el.innerHTML=S.data.companies.map(c=>{
+    const logo=c.logoDataUrl?`<img class="company-logo-card" src="${c.logoDataUrl}" alt="">`:'<div class="company-logo-placeholder">🏢</div>';
+    return`<div class="card"><div class="card-row"><div style="display:flex;align-items:center;gap:12px">${logo}<div><div class="card-title">${esc(c.name)}</div><div class="card-sub">${tplsFor(c.id).length} modèle(s) · ${peopleFor(c.id).length} collaborateur(s)</div></div></div><div style="display:flex;gap:6px"><button class="icon-btn" data-logo="${c.id}">🖼️</button><button class="icon-btn" data-rename="${c.id}">✏️</button>${S.data.companies.length>1?`<button class="icon-btn" data-delc="${c.id}">🗑️</button>`:''}</div></div></div>`;
+  }).join('');
+  el.querySelectorAll('[data-rename]').forEach(b=>b.addEventListener('click',()=>{const c=company(b.dataset.rename);const n=prompt('Nouveau nom :',c.name);if(n?.trim()){c.name=n.trim();saveData();renderAll();}}));
+  el.querySelectorAll('[data-logo]').forEach(b=>b.addEventListener('click',()=>openLogoModal(b.dataset.logo)));
+  el.querySelectorAll('[data-delc]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.delc;const c=company(id);if(!confirm(`Supprimer "${c.name}" ?`))return;S.data.companies=S.data.companies.filter(x=>x.id!==id);S.data.templates=S.data.templates.filter(t=>t.companyId!==id);S.data.people=S.data.people.filter(p=>p.companyId!==id);if(S.companyId===id)S.companyId=S.data.companies[0]?.id||null;saveData();renderAll();toast('Société supprimée');}));
+}
+function openNewCompanyModal(){
+  openModal(`<h3>Nouvelle société</h3>
+    <div class="form-group"><label>Logo (optionnel)</label><div id="ncLP"></div><input type="file" id="ncLogo" accept="image/*"></div>
+    <div class="form-group"><label>Nom</label><input type="text" id="ncName" placeholder="ex: Filiale Espagne"></div>
+    <div class="form-group"><label><input type="checkbox" id="ncCopy" checked> Copier les modèles d'une société existante</label><select id="ncFrom">${S.data.companies.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
+    <div class="form-actions"><button class="btn primary" id="ncSave">Créer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
+  let pLogo=null;
+  document.getElementById('ncLogo').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{pLogo=r.result;document.getElementById('ncLP').innerHTML=`<img class="logo-upload-preview" src="${pLogo}" alt="">`;};r.readAsDataURL(f);});
+  document.getElementById('ncSave').addEventListener('click',()=>{
+    const name=document.getElementById('ncName').value.trim();if(!name)return toast('Indique un nom');
+    const nc={id:uid(),name,logoDataUrl:pLogo};S.data.companies.push(nc);
+    if(document.getElementById('ncCopy').checked){const sid=document.getElementById('ncFrom').value;tplsFor(sid).forEach(t=>S.data.templates.push({id:uid(),companyId:nc.id,type:t.type,name:t.name,items:t.items.map(i=>({id:uid(),text:i.text,offsetDays:i.offsetDays}))}));}
+    saveData();S.companyId=nc.id;closeModal();renderAll();toast('Société créée');
+  });
+}
+function openLogoModal(cId){
+  const c=company(cId);
+  openModal(`<h3>Logo — ${esc(c.name)}</h3>
+    <div class="form-group"><div id="lP">${c.logoDataUrl?`<img class="logo-upload-preview" src="${c.logoDataUrl}" alt="">`:'<div class="company-logo-placeholder" style="width:72px;height:72px;font-size:24px">🏢</div>'}</div><input type="file" id="lFile" accept="image/*"></div>
+    <div class="form-actions"><button class="btn primary" id="lSave">Enregistrer</button>${c.logoDataUrl?'<button class="btn danger" id="lRm">Retirer</button>':''}<button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
+  let pL=c.logoDataUrl;
+  document.getElementById('lFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{pL=r.result;document.getElementById('lP').innerHTML=`<img class="logo-upload-preview" src="${pL}" alt="">`;};r.readAsDataURL(f);});
+  document.getElementById('lSave').addEventListener('click',()=>{c.logoDataUrl=pL;saveData();closeModal();renderAll();toast('Logo mis à jour');});
+  const rm=document.getElementById('lRm');if(rm)rm.addEventListener('click',()=>{c.logoDataUrl=null;saveData();closeModal();renderAll();toast('Logo retiré');});
+}
+
+// ── EXPORT/IMPORT/RESET ───────────────────────────────────
+function exportData(){const blob=new Blob([JSON.stringify(S.data,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=`cleverdesk-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);toast('Sauvegarde exportée');}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.companies||!d.templates||!d.people)throw new Error();if(!confirm('Remplacer toutes les données actuelles ?'))return;S.data=d;saveData();S.companyId=d.companies[0]?.id||null;renderAll();switchTab('people');toast('Données importées');}catch{toast('Fichier invalide');}};r.readAsText(f);e.target.value='';}
+function resetAll(){if(!confirm('Supprimer définitivement toutes les données ?'))return;S.data=seedData();saveData();S.companyId=S.data.companies[0].id;switchTab('home');toast('Données réinitialisées');}
+
+// ── ⚡ BRIDGE: HR → SMARTTASK ────────────────────────────
+function pushToSmartTask(p,c){
+  const now=new Date();
+  if(!S.data.smarttasks)S.data.smarttasks=[];
+  // Remove existing tasks for this person (re-sync)
+  S.data.smarttasks=S.data.smarttasks.filter(t=>t.personId!==p.id);
+  const tasks=p.checklist.map(item=>{
+    const dl=dueDate(p.refDate,item.offsetDays??0);
+    const diff=Math.round((dl-now)/86400000);
+    let priority='low';
+    if(diff<0)priority='high';else if(diff<=3)priority='high';else if(diff<=10)priority='medium';
+    return{
+      id:uid(),title:item.text,
+      notes:`👤 ${p.name} · ${p.type==='onboarding'?'Onboarding':'Offboarding'} · ${c.name}`,
+      deadline:dl.toISOString(),
+      reminder:diff>1?'1440':'60',
+      priority,category:c.name,
+      done:item.checked||false,
+      source:p.type==='onboarding'?'hr_onboarding':'hr_offboarding',
+      personId:p.id,checklistItemId:item.id,
+      createdAt:new Date().toISOString()
+    };
+  });
+  S.data.smarttasks.push(...tasks);
+  saveData();scheduleReminders();updateStBadge();
+  toast(`⚡ ${tasks.length} tâches synchronisées dans SmartTask`);
+}
+
+// ── SMARTTASK ─────────────────────────────────────────────
+function bindStFilters(){
+  document.querySelectorAll('[data-sf]').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('[data-sf]').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');S.stFilter=chip.dataset.sf;renderStList();
+    });
+  });
+}
+function renderST(){renderStStats();renderStList();}
+function renderStStats(){
+  const tasks=S.data.smarttasks||[];const now=new Date();
+  document.getElementById('stStatTotal').textContent=tasks.length;
+  document.getElementById('stStatDone').textContent=tasks.filter(t=>t.done).length;
+  document.getElementById('stStatOverdue').textContent=tasks.filter(t=>t.deadline&&new Date(t.deadline)<now&&!t.done).length;
+}
+function renderStList(){
+  const el=document.getElementById('stTaskList');if(!el)return;
+  const now=new Date();
+  let tasks=[...(S.data.smarttasks||[])];
+  tasks=tasks.filter(t=>{
+    if(S.stFilter==='all')return!t.done;
+    if(S.stFilter==='today')return t.deadline&&new Date(t.deadline).toDateString()===now.toDateString()&&!t.done;
+    if(S.stFilter==='overdue')return t.deadline&&new Date(t.deadline)<now&&!t.done;
+    if(S.stFilter==='hr')return(t.source==='hr_onboarding'||t.source==='hr_offboarding')&&!t.done;
+    if(S.stFilter==='high')return t.priority==='high'&&!t.done;
+    if(S.stFilter==='done')return t.done;
+    return true;
+  });
+  tasks.sort((a,b)=>{
+    if(a.done!==b.done)return a.done?1:-1;
+    const pm={high:0,medium:1,low:2};
+    const aO=a.deadline&&new Date(a.deadline)<now;const bO=b.deadline&&new Date(b.deadline)<now;
+    if(aO!==bO)return aO?-1:1;
+    if(pm[a.priority]!==pm[b.priority])return pm[a.priority]-pm[b.priority];
+    if(a.deadline&&b.deadline)return new Date(a.deadline)-new Date(b.deadline);
+    return 0;
+  });
+  if(!tasks.length){el.innerHTML=`<div class="empty-state">${S.stFilter==='all'?'🎉 Toutes les tâches sont terminées !':'Aucune tâche dans cette catégorie.'}</div>`;return;}
+  const pc={high:'var(--red)',medium:'var(--orange)',low:'var(--green)'};
+  el.innerHTML=tasks.map(t=>{
+    const isO=t.deadline&&new Date(t.deadline)<now&&!t.done;
+    const isS=t.deadline&&!isO&&(new Date(t.deadline)-now)<86400000&&!t.done;
+    const dl=t.deadline?stFmtDl(t.deadline,isO,isS):'';
+    const src=t.source==='hr_onboarding'||t.source==='hr_offboarding'?`<span class="badge onboarding" style="font-size:10px;cursor:pointer" onclick="switchTab('people')">📋 RH</span>`:'';
+    const cat=t.category?`<span class="st-tag">${esc(t.category)}</span>`:'';
+    return`<div class="card st-task-card ${t.done?'st-done':''}" style="border-left:4px solid ${pc[t.priority]||'var(--tx2)'}">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <button class="st-check ${t.done?'checked':''}" onclick="stToggle('${t.id}')">${t.done?'✓':''}</button>
+        <div style="flex:1">
+          <div class="card-title ${t.done?'st-strike':''}">${esc(t.title)}</div>
+          ${t.notes?`<div class="card-sub" style="margin-top:2px">${esc(t.notes)}</div>`:''}
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${dl}${src}${cat}</div>
+        </div>
+        <button class="icon-btn" onclick="stOpenEdit('${t.id}')">✏️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function companySelect(sel){
+  return`<select id="stC"><option value="">— Aucune —</option>${S.data.companies.map(c=>`<option value="${esc(c.name)}"${c.name===sel?' selected':''}>${esc(c.name)}</option>`).join('')}</select>`;
+}
+function stFmtDl(dl,overdue,soon){
+  const d=new Date(dl);const str=d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  if(overdue)return`<span class="due-tag overdue">⚠️ Retard : ${str}</span>`;
+  if(soon)return`<span class="due-tag soon">⏰ ${str}</span>`;
+  return`<span class="due-tag ok">📅 ${str}</span>`;
+}
+function stToggle(taskId){
+  const t=(S.data.smarttasks||[]).find(x=>x.id===taskId);if(!t)return;
+  t.done=!t.done;
+  if(t.personId&&t.checklistItemId){const p=person(t.personId);if(p){const item=p.checklist.find(i=>i.id===t.checklistItemId);if(item)item.checked=t.done;}}
+  saveData();renderST();renderPeopleList();updateStBadge();
+}
+function updateStBadge(){
+  const now=new Date();
+  const n=(S.data.smarttasks||[]).filter(t=>!t.done&&t.deadline&&(new Date(t.deadline)<now||(new Date(t.deadline)-now)<86400000)).length;
+  const btn=document.getElementById('stTabBtn');
+  if(btn)btn.textContent=n>0?`⚡ SmartTask (${n})`:'⚡ SmartTask';
+}
+function stOpenNew(){
+  S.stEditId=null;S.stPriority='medium';
+  openModal(`<h3>Nouvelle tâche</h3>
+    <div class="form-group"><label>Titre *</label><input type="text" id="stT" placeholder="Que faut-il faire ?"></div>
+    <div class="form-group"><label>Notes</label><textarea id="stN" style="height:60px" placeholder="Détails..."></textarea></div>
+    <div class="form-group"><label>Échéance</label><input type="datetime-local" id="stD"></div>
+    <div class="form-group"><label>Rappel</label><select id="stR"><option value="">Aucun</option><option value="15">15 min avant</option><option value="30">30 min avant</option><option value="60">1 heure avant</option><option value="1440">1 jour avant</option></select></div>
+    <div class="form-group"><label>Priorité</label><div class="st-prio-btns"><button class="st-prio-btn high" id="sph" onclick="stPrio('high')">🔴 Haute</button><button class="st-prio-btn medium active" id="spm" onclick="stPrio('medium')">🟡 Moyenne</button><button class="st-prio-btn low" id="spl" onclick="stPrio('low')">🟢 Basse</button></div></div>
+    <div class="form-group"><label>Société</label>${companySelect('')}</div>
+    <div class="form-actions"><button class="btn primary" onclick="stSave()">Enregistrer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
+}
+function stOpenEdit(tId){
+  const t=(S.data.smarttasks||[]).find(x=>x.id===tId);if(!t)return;
+  S.stEditId=tId;S.stPriority=t.priority||'medium';
+  const dv=t.deadline?new Date(t.deadline).toISOString().slice(0,16):'';
+  const isHR=t.source==='hr_onboarding'||t.source==='hr_offboarding';
+  openModal(`<h3>Modifier la tâche</h3>
+    ${isHR?'<div class="sync-hint">📋 Cette tâche est liée à un onboarding RH. Cocher ici met aussi à jour la fiche collaborateur.</div>':''}
+    <div class="form-group"><label>Titre *</label><input type="text" id="stT" value="${esc(t.title)}"></div>
+    <div class="form-group"><label>Notes</label><textarea id="stN" style="height:60px">${esc(t.notes||'')}</textarea></div>
+    <div class="form-group"><label>Échéance</label><input type="datetime-local" id="stD" value="${dv}"></div>
+    <div class="form-group"><label>Rappel</label><select id="stR"><option value="">Aucun</option><option value="15"${t.reminder==='15'?' selected':''}>15 min avant</option><option value="30"${t.reminder==='30'?' selected':''}>30 min avant</option><option value="60"${t.reminder==='60'?' selected':''}>1 heure avant</option><option value="1440"${t.reminder==='1440'?' selected':''}>1 jour avant</option></select></div>
+    <div class="form-group"><label>Priorité</label><div class="st-prio-btns"><button class="st-prio-btn high${t.priority==='high'?' active':''}" id="sph" onclick="stPrio('high')">🔴 Haute</button><button class="st-prio-btn medium${t.priority==='medium'?' active':''}" id="spm" onclick="stPrio('medium')">🟡 Moyenne</button><button class="st-prio-btn low${t.priority==='low'?' active':''}" id="spl" onclick="stPrio('low')">🟢 Basse</button></div></div>
+    <div class="form-group"><label>Société</label>${companySelect(t.category||'')}</div>
+    <div class="form-actions"><button class="btn primary" onclick="stSave()">Enregistrer</button><button class="btn danger" onclick="stDelete('${tId}')">Supprimer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
+}
+function stPrio(p){
+  S.stPriority=p;
+  ['high','medium','low'].forEach(x=>{const b=document.getElementById('sp'+x[0]);if(b){b.className=`st-prio-btn ${x}`;if(x===p)b.classList.add('active');}});
+}
+function stSave(){
+  const title=document.getElementById('stT')?.value.trim();if(!title)return toast('Indique un titre');
+  const dl=document.getElementById('stD')?.value;
+  if(!S.data.smarttasks)S.data.smarttasks=[];
+  const task={id:S.stEditId||uid(),title,notes:document.getElementById('stN')?.value.trim()||'',deadline:dl?new Date(dl).toISOString():null,reminder:document.getElementById('stR')?.value||'',priority:S.stPriority,category:document.getElementById('stC')?.value.trim()||'',done:false,source:'manual',createdAt:new Date().toISOString()};
+  if(S.stEditId){const idx=S.data.smarttasks.findIndex(t=>t.id===S.stEditId);if(idx>=0){const old=S.data.smarttasks[idx];task.done=old.done;task.source=old.source;task.personId=old.personId;task.checklistItemId=old.checklistItemId;S.data.smarttasks[idx]=task;}}
+  else S.data.smarttasks.unshift(task);
+  saveData();closeModal();renderST();scheduleReminders();updateStBadge();toast(S.stEditId?'✅ Tâche mise à jour':'✅ Tâche créée');
+}
+function stDelete(tId){
+  if(!confirm('Supprimer cette tâche ?'))return;
+  S.data.smarttasks=(S.data.smarttasks||[]).filter(t=>t.id!==tId);
+  saveData();closeModal();renderST();updateStBadge();toast('Tâche supprimée');
+}
+
+// ── AI IMPORT ─────────────────────────────────────────────
+function stOpenAiImport(){
+  openModal(`<h3>🤖 Importer des tâches via IA</h3>
+    <p class="hint">Colle un email, un message WhatsApp ou n'importe quel texte — l'IA en extrait les tâches, deadlines et priorités automatiquement.</p>
+    <div class="form-group"><label>Source</label><select id="aiSrc"><option value="email">📧 Email</option><option value="whatsapp">💬 WhatsApp Business</option><option value="autre">📝 Autre texte</option></select></div>
+    <div class="form-group"><label>Texte à analyser</label><textarea id="aiTxt" style="min-height:110px" placeholder="Colle ton email ou message ici...&#10;&#10;Ex: 'Bonjour, merci d'envoyer le rapport Q3 avant vendredi et de planifier un appel lundi à 14h.'"></textarea></div>
+    <div id="aiRes"></div>
+    <div class="form-actions"><button class="btn primary" id="aiBtn" onclick="runAI()">✨ Extraire les tâches</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
+}
+async function runAI(){
+  const txt=document.getElementById('aiTxt')?.value.trim();if(!txt)return toast('Colle un texte d\'abord');
+  const src=document.getElementById('aiSrc')?.value;
+  const res=document.getElementById('aiRes');const btn=document.getElementById('aiBtn');
+  if(btn)btn.disabled=true;
+  res.innerHTML='<p class="hint" style="text-align:center;margin-top:12px">🤖 Analyse en cours...</p>';
+  const today=new Date().toISOString().split('T')[0];
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`Tu es un assistant d'extraction de tâches. Analyse ce message ${src} et extrais toutes les actions à effectuer.\n\nDate d'aujourd'hui : ${today}\n\nRéponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après, avec des objets ayant ces champs :\n- title (string, titre concis en français)\n- notes (string, contexte ou "")\n- deadline (string ISO 8601 ou null)\n- priority ("high", "medium" ou "low")\n- category (string ou "")\n\nMessage :\n---\n${txt}\n---`}]})});
+    const data=await r.json();
+    const raw=(data.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
+    const extracted=JSON.parse(raw);
+    if(!extracted.length){res.innerHTML='<p class="hint" style="text-align:center">Aucune tâche détectée.</p>';return;}
+    window._aiEx=extracted.map(t=>({...t,source:src}));
+    const pc={high:'var(--red)',medium:'var(--orange)',low:'var(--green)'};
+    res.innerHTML=`<p style="font-weight:600;margin:14px 0 8px">${extracted.length} tâche(s) trouvée(s) :</p>
+      ${extracted.map((t,i)=>`<div class="card" style="margin-bottom:8px;border-left:4px solid ${pc[t.priority]||'var(--tx2)'}"><div class="card-title">${esc(t.title)}</div>${t.notes?`<div class="card-sub">${esc(t.notes)}</div>`:''}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${t.deadline?`<span class="due-tag ok">📅 ${new Date(t.deadline).toLocaleDateString('fr-FR')}</span>`:''}<span class="badge ${t.priority==='high'?'offboarding':t.priority==='medium'?'payroll':'onboarding'}">${t.priority==='high'?'Haute':t.priority==='medium'?'Moyenne':'Basse'}</span></div><button class="btn secondary small" style="margin-top:8px" onclick="aiAdd(${i})">+ Ajouter</button></div>`).join('')}
+      <button class="btn primary" style="width:100%;margin-top:4px" onclick="aiAddAll()">+ Ajouter toutes les tâches</button>`;
+  }catch(e){res.innerHTML='<p class="hint" style="color:var(--red);text-align:center">Erreur lors de l\'analyse. Réessaie.</p>';console.error(e);}
+  finally{if(btn)btn.disabled=false;}
+}
+function aiAdd(i){
+  const t=(window._aiEx||[])[i];if(!t)return;
+  if(!S.data.smarttasks)S.data.smarttasks=[];
+  S.data.smarttasks.unshift({id:uid(),title:t.title,notes:t.notes||'',deadline:t.deadline||null,reminder:'1440',priority:t.priority||'medium',category:t.category||'',done:false,source:'ai_import',createdAt:new Date().toISOString()});
+  saveData();renderST();updateStBadge();toast('✅ Tâche ajoutée');
+}
+function aiAddAll(){
+  const tasks=window._aiEx||[];if(!S.data.smarttasks)S.data.smarttasks=[];
+  tasks.forEach((t,i)=>S.data.smarttasks.unshift({id:uid()+'_'+i,title:t.title,notes:t.notes||'',deadline:t.deadline||null,reminder:'1440',priority:t.priority||'medium',category:t.category||'',done:false,source:'ai_import',createdAt:new Date().toISOString()}));
+  saveData();closeModal();renderST();updateStBadge();toast(`✅ ${tasks.length} tâches ajoutées`);
+}
+
+// ── PUSH NOTIFICATIONS ────────────────────────────────────
+async function requestNotif(){
+  if(!('Notification'in window))return toast('Notifications non supportées dans ce navigateur');
+  const p=await Notification.requestPermission();
+  if(p==='granted'){S.data.settings.notif=true;saveData();scheduleReminders();new Notification('⚡ SmartTask activé',{body:'Tu recevras des rappels pour tes tâches !'});toast('🔔 Notifications activées !');}
+  else toast('Notifications refusées. Active-les dans les paramètres du navigateur.');
+}
+function scheduleReminders(){
+  if(!('Notification'in window)||Notification.permission!=='granted')return;
+  const now=Date.now();
+  (S.data.smarttasks||[]).filter(t=>t.deadline&&t.reminder&&!t.done).forEach(t=>{
+    const fire=new Date(t.deadline).getTime()-(parseInt(t.reminder)*60000);
+    if(fire>now)setTimeout(()=>{if(!t.done)new Notification('⏰ '+t.title,{body:t.notes||'Deadline imminente !'});},fire-now);
+  });
+}
+
+// ── AUTH ──────────────────────────────────────────────────
+function bindAuthScreen(){
+  const errEl=document.getElementById('authError');
+  const show=msg=>{if(errEl)errEl.textContent=msg;};
+
+  document.getElementById('authLoginBtn').addEventListener('click',()=>{
+    const email=document.getElementById('authEmail').value.trim();
+    const pass=document.getElementById('authPassword').value;
+    if(!email||!pass)return show('Indique un email et un mot de passe');
+    show('Connexion en cours…');
+    const timer=setTimeout(()=>show('⚠️ Délai dépassé. Firebase est peut-être bloqué dans ce navigateur — utilise le mode local ci-dessous.'),7000);
+    firebase.auth().signInWithEmailAndPassword(email,pass)
+      .then(()=>clearTimeout(timer))
+      .catch(x=>{clearTimeout(timer);show(authErr(x));});
+  });
+
+  document.getElementById('authSignupBtn').addEventListener('click',()=>{
+    const email=document.getElementById('authEmail').value.trim();
+    const pass=document.getElementById('authPassword').value;
+    if(!email||!pass)return show('Indique un email et un mot de passe');
+    if(pass.length<6)return show('Mot de passe minimum 6 caractères');
+    show('Création du compte…');
+    const timer=setTimeout(()=>show('⚠️ Délai dépassé. Utilise le mode local ci-dessous.'),7000);
+    firebase.auth().createUserWithEmailAndPassword(email,pass)
+      .then(()=>clearTimeout(timer))
+      .catch(x=>{clearTimeout(timer);show(authErr(x));});
+  });
+
+  document.getElementById('authLocalBtn').addEventListener('click',()=>{
+    document.getElementById('authScreen').style.display='none';
+    startApp();
+  });
+}
+function authErr(e){const m={'auth/invalid-email':'Email invalide','auth/user-not-found':'Aucun compte avec cet email','auth/wrong-password':'Mot de passe incorrect','auth/email-already-in-use':'Un compte existe déjà avec cet email','auth/weak-password':'Mot de passe trop faible','auth/invalid-credential':'Email ou mot de passe incorrect'};return m[e.code]||e.message;}
+function bindLogoutButton(){const b=document.getElementById('btnLogout');if(b)b.addEventListener('click',()=>firebase.auth().signOut());}
+function initAuth(){
+  if(typeof firebase==='undefined'){startApp();return;}
+  bindAuthScreen();
+  firebase.auth().onAuthStateChanged(user=>{
+    if(user){subscribeCloud(user.uid);}
+    else{unsubCloud();started=false;document.getElementById('app').style.display='none';document.getElementById('authScreen').style.display='flex';}
+  });
+}
+initAuth();
+</script>
+</body>
+</html>
