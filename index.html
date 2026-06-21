@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TheCleverDesk Suite</title>
 <meta name="theme-color" content="#fb6a64">
+<link rel="icon" id="appFavicon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23fb6a64'/><text x='50' y='70' font-size='66' text-anchor='middle' fill='white'>⚡</text></svg>">
+<link rel="apple-touch-icon" id="appTouchIcon" href="">
+<link rel="manifest" id="appManifest" href="">
 <style>
 :root{--bg:#fff;--bg-el:#f4f4f5;--bg-card:#fafafa;--bd:#e3e3e6;--tx:#181818;--tx2:#7a7a7e;--ac:#fb6a64;--acd:#e2473f;--green:#2fa873;--orange:#d98a13;--red:#e2473f;--r:14px;}
 *{box-sizing:border-box;}
@@ -130,7 +133,7 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
 <!-- APP -->
 <div id="app" style="display:none">
   <nav id="topbar">
-    <div class="brand">⚡ TheCleverDesk</div>
+    <div class="brand">⚡ TheCleverDesk Suite</div>
     <div id="companySwitcher"></div>
   </nav>
   <nav id="tabs">
@@ -254,7 +257,30 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 if(!firebase.apps.length){firebase.initializeApp({
-  apiKey:"AIzaSyCn2tqcWC5RS4tjCJFZf6aeNMAwDhNKHNA",
+// ── PWA ICON & MANIFEST ──────────────────────────────────
+function setupPWA(){
+  function mkIcon(sz){
+    const c=document.createElement('canvas');c.width=c.height=sz;
+    const x=c.getContext('2d'),r=sz*.22;
+    x.fillStyle='#fb6a64';
+    x.beginPath();x.moveTo(r,0);x.lineTo(sz-r,0);x.arcTo(sz,0,sz,r,r);
+    x.lineTo(sz,sz-r);x.arcTo(sz,sz,sz-r,sz,r);
+    x.lineTo(r,sz);x.arcTo(0,sz,0,sz-r,r);
+    x.lineTo(0,r);x.arcTo(0,0,r,0,r);x.closePath();x.fill();
+    x.font=`bold ${sz*.62}px serif`;x.textAlign='center';x.textBaseline='middle';
+    x.fillText('⚡',sz/2,sz/2+sz*.03);
+    return c.toDataURL('image/png');
+  }
+  const i192=mkIcon(192),i512=mkIcon(512);
+  const ti=document.getElementById('appTouchIcon');if(ti)ti.href=i192;
+  const fi=document.getElementById('appFavicon');if(fi)fi.href=i192;
+  const mf=document.getElementById('appManifest');
+  if(mf){
+    const m={name:'TheCleverDesk Suite',short_name:'CleverDesk',start_url:'/',display:'standalone',orientation:'portrait',theme_color:'#fb6a64',background_color:'#ffffff',icons:[{src:i192,sizes:'192x192',type:'image/png',purpose:'any maskable'},{src:i512,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
+    mf.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));
+  }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupPWA);else setupPWA();  apiKey:"AIzaSyCn2tqcWC5RS4tjCJFZf6aeNMAwDhNKHNA",
   authDomain:"cleverdesk-rh.firebaseapp.com",
   projectId:"cleverdesk-rh",
   storageBucket:"cleverdesk-rh.firebasestorage.app",
