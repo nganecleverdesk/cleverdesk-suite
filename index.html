@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TheCleverDesk Suite</title>
 <meta name="theme-color" content="#fb6a64">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" id="appFavicon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23fb6a64'/><text x='50' y='70' font-size='66' text-anchor='middle' fill='white'>⚡</text></svg>">
 <link rel="apple-touch-icon" id="appTouchIcon" href="">
 <link rel="manifest" id="appManifest" href="">
@@ -87,13 +88,11 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
 .company-logo-card{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1px solid var(--bd);flex-shrink:0;}
 .company-logo-placeholder{width:44px;height:44px;border-radius:10px;border:1px dashed var(--bd);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--tx2);}
 .logo-upload-preview{width:72px;height:72px;border-radius:12px;object-fit:cover;border:1px solid var(--bd);margin-bottom:10px;}
-/* === SMARTTASK === */
 .st-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
 .st-stat-card{background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--r);padding:12px;text-align:center;}
 .st-stat-num{font-size:26px;font-weight:800;color:var(--ac);}
 .st-stat-label{font-size:11px;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
-.st-task-card{transition:transform .15s;}
-.st-task-card:hover{border-color:var(--ac);}
+.st-task-card{transition:transform .15s;}.st-task-card:hover{border-color:var(--ac);}
 .st-done{opacity:.55;}
 .st-strike{text-decoration:line-through;color:var(--tx2)!important;}
 .st-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd);background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:transparent;transition:all .2s;}
@@ -110,7 +109,6 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
 </head>
 <body>
 
-<!-- AUTH -->
 <div id="authScreen" class="auth-screen">
   <div class="auth-box">
     <div class="auth-logo">⚡</div>
@@ -130,7 +128,6 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
   </div>
 </div>
 
-<!-- APP -->
 <div id="app" style="display:none">
   <nav id="topbar">
     <div class="brand">⚡ TheCleverDesk Suite</div>
@@ -146,8 +143,6 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
     <button class="tab-btn" data-tab="settings">Réglages</button>
   </nav>
   <main id="content">
-
-    <!-- HOME -->
     <section id="tab-home" class="tab-panel active">
       <div class="panel-header"><h2>Que veux-tu faire ?</h2></div>
       <div class="list">
@@ -156,8 +151,6 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
         <div class="card home-card" id="homeGoST"><div class="home-card-icon">⚡</div><div><div class="card-title">SmartTask</div><div class="card-sub">Toutes mes tâches et deadlines</div></div></div>
       </div>
     </section>
-
-    <!-- PEOPLE -->
     <section id="tab-people" class="tab-panel">
       <div class="panel-header"><button class="btn ghost" id="btnHomeFromPeople">← Accueil</button><button class="btn primary" id="btnNewPerson">+ Nouveau</button></div>
       <h2>Collaborateurs</h2>
@@ -169,45 +162,30 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
       </div>
       <div id="peopleList" class="list"></div>
     </section>
-
-    <!-- PERSON DETAIL -->
     <section id="tab-personDetail" class="tab-panel">
       <div class="panel-header"><button class="btn ghost" id="btnBackToPeople">← Retour</button></div>
       <div id="personDetailContent"></div>
     </section>
-
-    <!-- TEMPLATES -->
     <section id="tab-templates" class="tab-panel">
       <div class="panel-header"><h2>Modèles de checklist</h2><button class="btn primary" id="btnNewTemplate">+ Nouveau modèle</button></div>
       <p class="hint">Modèles liés à la société sélectionnée en haut.</p>
       <div id="templatesList" class="list"></div>
     </section>
-
-    <!-- TEMPLATE EDIT -->
     <section id="tab-templateEdit" class="tab-panel">
       <div class="panel-header"><button class="btn ghost" id="btnBackToTemplates">← Retour</button></div>
       <div id="templateEditContent"></div>
     </section>
-
-    <!-- SALARY -->
     <section id="tab-salary" class="tab-panel">
       <div class="panel-header"><button class="btn ghost" id="btnHomeFromSalary">← Accueil</button><button class="btn primary" id="btnNewPeriod">+ Nouvelle période</button></div>
       <h2>Salaires</h2>
       <div id="salaryList" class="list"></div>
     </section>
-
-    <!-- SALARY PERIOD DETAIL -->
     <section id="tab-salaryPeriodDetail" class="tab-panel">
       <div class="panel-header"><button class="btn ghost" id="btnBackToSalary">← Retour</button></div>
       <div id="salaryPeriodDetailContent"></div>
     </section>
-
-    <!-- SMARTTASK -->
     <section id="tab-smarttask" class="tab-panel">
-      <div class="panel-header">
-        <h2>⚡ SmartTask</h2>
-        <button class="btn secondary small" onclick="stOpenAiImport()">🤖 Importer via IA</button>
-      </div>
+      <div class="panel-header"><h2>⚡ SmartTask</h2><button class="btn secondary small" onclick="stOpenAiImport()">🤖 Importer via IA</button></div>
       <div class="st-stats">
         <div class="st-stat-card"><div class="st-stat-num" id="stStatTotal">0</div><div class="st-stat-label">Total</div></div>
         <div class="st-stat-card"><div class="st-stat-num" id="stStatDone" style="color:var(--green)">0</div><div class="st-stat-label">Faites</div></div>
@@ -224,14 +202,10 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
       <div id="stTaskList" class="list"></div>
       <div style="height:80px"></div>
     </section>
-
-    <!-- COMPANIES -->
     <section id="tab-companies" class="tab-panel">
       <div class="panel-header"><h2>Sociétés</h2><button class="btn primary" id="btnNewCompany">+ Nouvelle société</button></div>
       <div id="companiesList" class="list"></div>
     </section>
-
-    <!-- SETTINGS -->
     <section id="tab-settings" class="tab-panel">
       <h2>Réglages & sauvegarde</h2>
       <div class="settings-actions">
@@ -256,8 +230,7 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--tx);font-family:-a
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-if(!firebase.apps.length){firebase.initializeApp({
-// ── PWA ICON & MANIFEST ──────────────────────────────────
+// ── PWA ICON ─────────────────────────────────────────────
 function setupPWA(){
   function mkIcon(sz){
     const c=document.createElement('canvas');c.width=c.height=sz;
@@ -276,24 +249,30 @@ function setupPWA(){
   const fi=document.getElementById('appFavicon');if(fi)fi.href=i192;
   const mf=document.getElementById('appManifest');
   if(mf){
-    const m={name:'TheCleverDesk Suite',short_name:'CleverDesk',start_url:'/',display:'standalone',orientation:'portrait',theme_color:'#fb6a64',background_color:'#ffffff',icons:[{src:i192,sizes:'192x192',type:'image/png',purpose:'any maskable'},{src:i512,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
+    const m={name:'TheCleverDesk Suite',short_name:'CleverDesk',start_url:'/',display:'standalone',orientation:'portrait',theme_color:'#fb6a64',background_color:'#fff',icons:[{src:i192,sizes:'192x192',type:'image/png',purpose:'any maskable'},{src:i512,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
     mf.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));
   }
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupPWA);else setupPWA();  apiKey:"AIzaSyCn2tqcWC5RS4tjCJFZf6aeNMAwDhNKHNA",
-  authDomain:"cleverdesk-rh.firebaseapp.com",
-  projectId:"cleverdesk-rh",
-  storageBucket:"cleverdesk-rh.firebasestorage.app",
-  messagingSenderId:"576386279930",
-  appId:"1:576386279930:web:cd6d9be854a55587735c43"
-});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupPWA);else setupPWA();
 
-// ── STORAGE ──────────────────────────────────────────────
+// ── FIREBASE ──────────────────────────────────────────────
+if(!firebase.apps.length){
+  firebase.initializeApp({
+    apiKey:"AIzaSyCn2tqcWC5RS4tjCJFZf6aeNMAwDhNKHNA",
+    authDomain:"cleverdesk-rh.firebaseapp.com",
+    projectId:"cleverdesk-rh",
+    storageBucket:"cleverdesk-rh.firebasestorage.app",
+    messagingSenderId:"576386279930",
+    appId:"1:576386279930:web:cd6d9be854a55587735c43"
+  });
+}
+
+// ── STORAGE ───────────────────────────────────────────────
 const STORE_KEY='cleverdesk_v2';
 function loadData(){try{const r=localStorage.getItem(STORE_KEY);if(r)return JSON.parse(r);}catch(e){}return seedData();}
-function saveData(){try{localStorage.setItem(STORE_KEY,JSON.stringify(S.data));}catch(e){console.warn('localStorage indisponible, sync cloud uniquement');}queueCloud();}
+function saveData(){try{localStorage.setItem(STORE_KEY,JSON.stringify(S.data));}catch(e){}queueCloud();}
 
-// ── CLOUD SYNC ───────────────────────────────────────────
+// ── CLOUD SYNC ────────────────────────────────────────────
 const sync={uid:null,unsub:null,applying:false,timer:null};
 function setSyncStatus(t){const el=document.getElementById('syncStatusText');if(el)el.textContent=t;}
 function queueCloud(){
@@ -309,22 +288,24 @@ function subscribeCloud(uid){
   sync.uid=uid;
   const ref=firebase.firestore().collection('users').doc(uid);
   ref.get().then(snap=>{
-    if(snap.exists){sync.applying=true;S.data=snap.data();migrate();localStorage.setItem(STORE_KEY,JSON.stringify(S.data));sync.applying=false;}
+    if(snap.exists){sync.applying=true;S.data=snap.data();migrate();try{localStorage.setItem(STORE_KEY,JSON.stringify(S.data));}catch(e){}sync.applying=false;}
     else ref.set(S.data);
     startApp();
-  }).catch(e=>{setSyncStatus('Hors-ligne');startApp();});
+  }).catch(()=>{setSyncStatus('Hors-ligne');startApp();});
   sync.unsub=ref.onSnapshot(snap=>{
     if(!snap.exists)return;
     const inc=JSON.stringify(snap.data());
     if(inc===JSON.stringify(S.data))return;
-    sync.applying=true;S.data=snap.data();migrate();localStorage.setItem(STORE_KEY,JSON.stringify(S.data));
+    sync.applying=true;S.data=snap.data();migrate();
+    try{localStorage.setItem(STORE_KEY,JSON.stringify(S.data));}catch(e){}
     if(S.companyId&&!company(S.companyId))S.companyId=S.data.companies[0]?.id||null;
-    renderAll();sync.applying=false;setSyncStatus('Mis à jour · '+new Date().toLocaleTimeString('fr-FR'));
+    renderAll();sync.applying=false;
+    setSyncStatus('Mis à jour · '+new Date().toLocaleTimeString('fr-FR'));
   });
 }
 function unsubCloud(){if(sync.unsub)sync.unsub();sync.uid=null;sync.unsub=null;}
 
-// ── UTILS ────────────────────────────────────────────────
+// ── UTILS ─────────────────────────────────────────────────
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -387,32 +368,29 @@ function seedData(){
 }
 
 // ── STATE ─────────────────────────────────────────────────
-const S={
-  data:loadData(),companyId:null,tab:'home',
-  peopleFilter:'all',personId:null,templateId:null,payrollId:null,
-  stFilter:'all',stEditId:null,stPriority:'medium'
-};
+const S={data:loadData(),companyId:null,tab:'home',peopleFilter:'all',personId:null,templateId:null,payrollId:null,stFilter:'all',stEditId:null,stPriority:'medium'};
 
 function migrate(){
   if(!S.data.payrollPeriods)S.data.payrollPeriods=[];
   if(!S.data.smarttasks)S.data.smarttasks=[];
   if(!S.data.settings)S.data.settings={notif:false};
-  if(S.data.payrollTemplates){
-    S.data.payrollTemplates.forEach(t=>{S.data.templates.push({id:t.id,companyId:t.companyId,type:'payroll',name:'Checklist salaire',items:t.items});});
-    delete S.data.payrollTemplates;
-  }
+  if(!Array.isArray(S.data.companies))S.data.companies=[];
+  if(!Array.isArray(S.data.templates))S.data.templates=[];
+  if(!Array.isArray(S.data.people))S.data.people=[];
+  if(S.data.payrollTemplates){S.data.payrollTemplates.forEach(t=>S.data.templates.push({id:t.id,companyId:t.companyId,type:'payroll',name:'Checklist salaire',items:t.items}));delete S.data.payrollTemplates;}
   S.data.companies.forEach(c=>{if(c.logoDataUrl===undefined)c.logoDataUrl=null;});
 }
 
 let started=false;
 function startApp(){
-  if(!S.data.companies.length)S.data=seedData();
-  migrate();localStorage.setItem(STORE_KEY,JSON.stringify(S.data));
+  if(!S.data.companies||!S.data.companies.length)S.data=seedData();
+  migrate();
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(S.data));}catch(e){}
   if(!S.companyId||!company(S.companyId))S.companyId=S.data.companies[0].id;
   document.getElementById('authScreen').style.display='none';
   document.getElementById('app').style.display='';
   renderCompanySwitcher();renderAll();
-  setSyncStatus(sync.uid?'Synchronisé':'Hors-ligne');
+  setSyncStatus(sync.uid?'Synchronisé':'Mode local');
   if(started)return;started=true;
   bindTabs();bindGlobal();bindStFilters();updateStBadge();scheduleReminders();
 }
@@ -427,10 +405,11 @@ function periodsFor(cId){return S.data.payrollPeriods.filter(p=>p.companyId===cI
 function period(id){return S.data.payrollPeriods.find(p=>p.id===id);}
 function progress(p){if(!p.checklist.length)return 0;return Math.round(p.checklist.filter(i=>i.checked).length/p.checklist.length*100);}
 function payrollProgress(p){const all=[...p.checklist,...p.extras];return all.length?Math.round(all.filter(i=>i.checked).length/all.length*100):0;}
+function companySelect(sel){return`<select id="stC"><option value="">— Aucune —</option>${S.data.companies.map(c=>`<option value="${esc(c.name)}"${c.name===sel?' selected':''}>${esc(c.name)}</option>`).join('')}</select>`;}
 
 // ── COMPANY SWITCHER ──────────────────────────────────────
 function renderCompanySwitcher(){
-  const el=document.getElementById('companySwitcher');
+  const el=document.getElementById('companySwitcher');if(!el)return;
   const cur=company(S.companyId);
   const logo=cur?.logoDataUrl?`<img class="company-logo-mini" src="${cur.logoDataUrl}" alt="">`:'';
   el.innerHTML=`${logo}<select id="cmpSel">${S.data.companies.map(c=>`<option value="${c.id}"${c.id===S.companyId?' selected':''}>${esc(c.name)}</option>`).join('')}</select>`;
@@ -438,9 +417,7 @@ function renderCompanySwitcher(){
 }
 
 // ── TABS ──────────────────────────────────────────────────
-function bindTabs(){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
-}
+function bindTabs(){document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));}
 function switchTab(tab){
   S.tab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -473,15 +450,11 @@ function bindGlobal(){
   document.getElementById('importFile').addEventListener('change',importData);
   document.getElementById('btnResetAll').addEventListener('click',resetAll);
   document.getElementById('btnNotif').addEventListener('click',requestNotif);
-  const logoutBtn=document.getElementById('btnLogout');
-  if(logoutBtn)logoutBtn.addEventListener('click',()=>firebase.auth().signOut());
+  document.getElementById('btnLogout').addEventListener('click',()=>{if(sync.uid)firebase.auth().signOut();else{started=false;document.getElementById('app').style.display='none';document.getElementById('authScreen').style.display='flex';}});
   document.querySelectorAll('#peopleFilters .chip').forEach(chip=>{
-    chip.addEventListener('click',()=>{
-      document.querySelectorAll('#peopleFilters .chip').forEach(c=>c.classList.remove('active'));
-      chip.classList.add('active');S.peopleFilter=chip.dataset.filter;renderPeopleList();
-    });
+    chip.addEventListener('click',()=>{document.querySelectorAll('#peopleFilters .chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');S.peopleFilter=chip.dataset.filter;renderPeopleList();});
   });
-  document.getElementById('installHint').innerHTML='<strong>Installer l\'app :</strong><br>• Mac (Chrome) : icône installation dans la barre d\'adresse.<br>• Android (Chrome) : menu ⋮ → "Installer" ou "Ajouter à l\'écran d\'accueil".';
+  document.getElementById('installHint').innerHTML='<strong>Installer l\'app :</strong><br>• Mac (Chrome) : icône installation dans la barre d\'adresse.<br>• Android (Chrome) : menu ⋮ → "Installer l\'application".';
 }
 
 function renderAll(){
@@ -504,13 +477,11 @@ function openNewPeriodModal(){
   const tpls=tplsFor(cId,'payroll');
   openModal(`<h3>Nouvelle période de salaire</h3>
     <div class="form-group"><label>Mois</label><input type="month" id="npmMonth" value="${dm}"></div>
-    <div class="form-group"><label>Modèle</label><select id="npmTpl">${tpls.length?tpls.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join(''):'<option value="">Aucun modèle — créer dans Checklists</option>'}</select></div>
+    <div class="form-group"><label>Modèle</label><select id="npmTpl">${tpls.length?tpls.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join(''):'<option value="">Aucun modèle</option>'}</select></div>
     <div class="form-actions"><button class="btn primary" id="npmSave">Créer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
   document.getElementById('npmSave').addEventListener('click',()=>{
-    const month=document.getElementById('npmMonth').value;
-    const tId=document.getElementById('npmTpl').value;
-    if(!month)return toast('Indique un mois');
-    if(!tId)return toast('Choisis un modèle');
+    const month=document.getElementById('npmMonth').value;const tId=document.getElementById('npmTpl').value;
+    if(!month)return toast('Indique un mois');if(!tId)return toast('Choisis un modèle');
     if(S.data.payrollPeriods.some(p=>p.companyId===cId&&p.month===month))return toast('Cette période existe déjà');
     const tpl=template(tId);
     const p={id:uid(),companyId:cId,month,templateId:tId,checklist:tpl.items.map(it=>({id:uid(),text:it.text,checked:false})),extras:[]};
@@ -525,7 +496,7 @@ function renderPeriodDetail(){
   const exHtml=p.extras.map(i=>`<div class="checklist-item ${i.checked?'checked':''}"><input type="checkbox" data-ei="${i.id}"${i.checked?' checked':''}><div class="item-text">${esc(i.text)}</div><button class="icon-btn" data-dei="${i.id}">✕</button></div>`).join('');
   el.innerHTML=`<div class="person-header"><h2>${esc(cap(monthLabel(p.month)))}</h2><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div class="card-sub" style="margin-top:6px">${pct}% complété</div></div>
     <h3>Checklist type</h3><div class="card">${clHtml||'<div class="empty-state">Aucun point.</div>'}</div>
-    <h3>Points ponctuels</h3><div class="card">${exHtml||'<div class="empty-state">Aucun point ponctuel.</div>'}</div>
+    <h3>Points ponctuels</h3><div class="card">${exHtml||'<div class="empty-state">Aucun.</div>'}</div>
     <div class="form-group" style="margin-top:12px;display:flex;gap:8px"><input type="text" id="newExtra" placeholder="ex: Déduire avance salaire — Jean Martin — 300 CHF" style="flex:1"><button class="btn secondary" id="btnAddEx">+ Ajouter</button></div>
     <div class="form-actions"><button class="btn danger" id="btnDelPeriod">Supprimer cette période</button></div>`;
   el.querySelectorAll('[data-ci]').forEach(cb=>cb.addEventListener('change',()=>{const i=p.checklist.find(x=>x.id===cb.dataset.ci);i.checked=cb.checked;saveData();renderPeriodDetail();renderSalaryList();}));
@@ -538,15 +509,15 @@ function renderPeriodDetail(){
 // ── MODAL / TOAST ─────────────────────────────────────────
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function openModal(html){
-  const r=document.getElementById('modalRoot');
-  r.innerHTML=`<div class="modal-overlay" id="mOverlay"><div class="modal-box">${html}</div></div>`;
+  document.getElementById('modalRoot').innerHTML=`<div class="modal-overlay" id="mOverlay"><div class="modal-box">${html}</div></div>`;
   document.getElementById('mOverlay').addEventListener('click',e=>{if(e.target.id==='mOverlay')closeModal();});
 }
 function closeModal(){document.getElementById('modalRoot').innerHTML='';}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 // ── PEOPLE ────────────────────────────────────────────────
 function renderPeopleList(){
-  const el=document.getElementById('peopleList');
+  const el=document.getElementById('peopleList');if(!el)return;
   let people=peopleFor(S.companyId);
   if(S.peopleFilter==='onboarding')people=people.filter(p=>p.type==='onboarding'&&progress(p)<100);
   else if(S.peopleFilter==='offboarding')people=people.filter(p=>p.type==='offboarding'&&progress(p)<100);
@@ -575,12 +546,13 @@ function openNewPersonModal(){
     document.getElementById('npOF').style.display=t==='onboarding'?'block':'none';
     document.getElementById('npFF').style.display=t==='offboarding'?'block':'none';
     const list=t==='onboarding'?oTpls:fTpls;
-    document.getElementById('npTpl').innerHTML=list.length?list.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join(''):'<option value="">Aucun modèle</option>';
+    document.getElementById('npTpl').innerHTML=list.length?list.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join(''):'<option value="">Aucun modèle</option>';
     prev();
   }
   function prev(){
     if(document.getElementById('npType').value!=='onboarding')return;
-    const d=document.getElementById('npDate').value;const m=parseInt(document.getElementById('npProb').value)||0;const el=document.getElementById('npPPrev');
+    const d=document.getElementById('npDate').value;const m=parseInt(document.getElementById('npProb').value)||0;
+    const el=document.getElementById('npPPrev');
     if(!d){el.textContent="Indique la date d'arrivée pour calculer la fin de période d'essai.";return;}
     el.textContent=`Fin de période d'essai : ${fmtDate(toISO(addMonths(d,m)))}`;
   }
@@ -593,16 +565,13 @@ function openNewPersonModal(){
     const type=document.getElementById('npType').value;
     const refDate=document.getElementById('npDate').value;
     const tId=document.getElementById('npTpl').value;
-    if(!name)return toast('Indique un nom');
-    if(!refDate)return toast('Indique une date');
-    if(!tId)return toast('Choisis un modèle');
+    if(!name)return toast('Indique un nom');if(!refDate)return toast('Indique une date');if(!tId)return toast('Choisis un modèle');
     const tpl=template(tId);
     const checklist=tpl.items.map(it=>({id:uid(),text:it.text,offsetDays:it.offsetDays,checked:false}));
     const prob=type==='onboarding'?(parseInt(document.getElementById('npProb').value)||0):null;
     const entry=type==='onboarding'?refDate:(document.getElementById('npEntry')?.value||null);
     const p={id:uid(),companyId:c.id,name,type,refDate,entryDate:entry,probationMonths:prob,templateId:tId,checklist};
     S.data.people.push(p);saveData();closeModal();renderPeopleList();
-    // ⚡ BRIDGE
     pushToSmartTask(p,c);
   });
 }
@@ -614,8 +583,7 @@ function renderPersonDetail(){
   const pct=progress(p);
   const sorted=p.checklist.slice().sort((a,b)=>(a.offsetDays??0)-(b.offsetDays??0));
   const itemsHtml=sorted.map(item=>{
-    const due=dueDate(p.refDate,item.offsetDays);
-    const diff=Math.round((due-today)/86400000);
+    const due=dueDate(p.refDate,item.offsetDays);const diff=Math.round((due-today)/86400000);
     let cls='ok';if(!item.checked){if(diff<0)cls='overdue';else if(diff<=2)cls='soon';}
     const lbl=item.checked?'Fait':(diff===0?"Aujourd'hui":diff>0?`J-${diff} (${fmtDate(toISO(due))})`:`Retard ${Math.abs(diff)}j (${fmtDate(toISO(due))})`);
     return`<div class="checklist-item ${item.checked?'checked':''}"><input type="checkbox" data-iid="${item.id}"${item.checked?' checked':''}><div class="item-text">${esc(item.text)}</div><div class="due-tag ${item.checked?'ok':cls}">${lbl}</div></div>`;
@@ -628,14 +596,11 @@ function renderPersonDetail(){
   const profHtml=profRows.length?`<div class="card" style="margin-bottom:14px">${profRows.map(([l,v])=>`<div class="profile-row"><span class="profile-label">${esc(l)}</span><span class="profile-value">${esc(v)}</span></div>`).join('')}</div>`:'';
   const el=document.getElementById('personDetailContent');
   el.innerHTML=`<div class="person-header"><h2>${esc(p.name)}</h2>
-    <div class="person-meta"><span class="badge ${p.type}">${p.type==='onboarding'?'Arrivée':'Départ'}</span><span>${company(p.companyId)?.name||''}</span><span>${p.type==='onboarding'?'Arrivée':'Départ'} le ${fmtDate(p.refDate)}</span>${stBadge}</div>
+    <div class="person-meta"><span class="badge ${p.type}">${p.type==='onboarding'?'Arrivée':'Départ'}</span><span>${company(p.companyId)?.name||''}</span><span>${fmtDate(p.refDate)}</span>${stBadge}</div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
     <div class="card-sub" style="margin-top:6px">${pct}% complété</div></div>
     ${profHtml}<div class="card">${itemsHtml||'<div class="empty-state">Aucune tâche.</div>'}</div>
-    <div class="form-actions">
-      <button class="btn secondary" id="btnResync">⚡ Re-sync SmartTask</button>
-      <button class="btn danger" id="btnDelP">Supprimer</button>
-    </div>`;
+    <div class="form-actions"><button class="btn secondary" id="btnResync">⚡ Re-sync SmartTask</button><button class="btn danger" id="btnDelP">Supprimer</button></div>`;
   el.querySelectorAll('[data-iid]').forEach(cb=>cb.addEventListener('change',()=>{
     const item=p.checklist.find(i=>i.id===cb.dataset.iid);item.checked=cb.checked;
     const st=(S.data.smarttasks||[]).find(t=>t.personId===p.id&&t.checklistItemId===item.id);
@@ -654,16 +619,16 @@ function renderPersonDetail(){
 // ── TEMPLATES ─────────────────────────────────────────────
 const TPL_LABELS={onboarding:'Arrivée',offboarding:'Départ',payroll:'Salaire'};
 function renderTemplatesList(){
-  const el=document.getElementById('templatesList');
+  const el=document.getElementById('templatesList');if(!el)return;
   const tpls=tplsFor(S.companyId);
-  if(!tpls.length){el.innerHTML='<div class="empty-state">Aucun modèle. Crée un modèle d\'onboarding, offboarding ou salaire.</div>';return;}
+  if(!tpls.length){el.innerHTML='<div class="empty-state">Aucun modèle.</div>';return;}
   el.innerHTML=tpls.map(t=>`<div class="card"><div class="card-row" data-tt="${t.id}"><div><div class="card-title">${esc(t.name)}</div><div class="card-sub">${t.items.length} tâche(s)</div></div><span class="badge ${t.type}">${TPL_LABELS[t.type]||t.type}</span></div></div>`).join('');
   el.querySelectorAll('[data-tt]').forEach(e=>e.addEventListener('click',()=>openTemplateEdit(e.dataset.tt)));
 }
 function openNewTemplateModal(){
   openModal(`<h3>Nouveau modèle</h3>
     <div class="form-group"><label>Nom</label><input type="text" id="ntName" placeholder="ex: Checklist arrivée commercial"></div>
-    <div class="form-group"><label>Type</label><select id="ntType"><option value="onboarding">Onboarding (arrivée)</option><option value="offboarding">Offboarding (départ)</option><option value="payroll">Salaire</option></select></div>
+    <div class="form-group"><label>Type</label><select id="ntType"><option value="onboarding">Onboarding</option><option value="offboarding">Offboarding</option><option value="payroll">Salaire</option></select></div>
     <div class="form-actions"><button class="btn primary" id="ntSave">Créer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
   document.getElementById('ntSave').addEventListener('click',()=>{
     const name=document.getElementById('ntName').value.trim();const type=document.getElementById('ntType').value;
@@ -675,10 +640,10 @@ function openTemplateEdit(tId){S.templateId=tId;renderTemplateEdit();showPanel('
 function renderTemplateEdit(){
   const tpl=template(S.templateId);if(!tpl)return;
   const isPay=tpl.type==='payroll';const el=document.getElementById('templateEditContent');
-  const itemsHtml=tpl.items.map(item=>`<div class="template-item-row" data-tid="${item.id}"><input type="text" value="${esc(item.text)}" data-f="text" placeholder="Tâche">${isPay?'':`<input type="number" value="${item.offsetDays??0}" data-f="off" title="Jours relatifs à la date (négatif = avant)">`}<button class="icon-btn" data-di>✕</button></div>`).join('');
+  const itemsHtml=tpl.items.map(item=>`<div class="template-item-row" data-tid="${item.id}"><input type="text" value="${esc(item.text)}" data-f="text" placeholder="Tâche">${isPay?'':`<input type="number" value="${item.offsetDays??0}" data-f="off" title="Jours relatifs (négatif = avant)">`}<button class="icon-btn" data-di>✕</button></div>`).join('');
   el.innerHTML=`<div class="form-group"><label>Nom</label><input type="text" id="teName" value="${esc(tpl.name)}"></div>
     <div class="form-group"><label>Type</label><select id="teType"><option value="onboarding"${tpl.type==='onboarding'?' selected':''}>Onboarding</option><option value="offboarding"${tpl.type==='offboarding'?' selected':''}>Offboarding</option><option value="payroll"${tpl.type==='payroll'?' selected':''}>Salaire</option></select></div>
-    <h3>Tâches</h3><p class="hint">${isPay?'Points proposés à chaque période de salaire.':'Jours relatifs à la date de référence (ex: -7 = 7 jours avant, 0 = jour J, 30 = un mois après).'}</p>
+    <h3>Tâches</h3><p class="hint">${isPay?'Points proposés à chaque période.':'Jours relatifs à la date de référence (ex: -7 = 7 jours avant, 0 = jour J).'}</p>
     <div id="teItems">${itemsHtml}</div>
     <button class="btn secondary" id="teAdd">+ Ajouter une tâche</button>
     <div class="form-actions"><button class="btn primary" id="teSave">Enregistrer</button><button class="btn danger" id="teDel">Supprimer le modèle</button></div>`;
@@ -694,7 +659,7 @@ function renderTemplateEdit(){
 
 // ── COMPANIES ─────────────────────────────────────────────
 function renderCompaniesList(){
-  const el=document.getElementById('companiesList');
+  const el=document.getElementById('companiesList');if(!el)return;
   el.innerHTML=S.data.companies.map(c=>{
     const logo=c.logoDataUrl?`<img class="company-logo-card" src="${c.logoDataUrl}" alt="">`:'<div class="company-logo-placeholder">🏢</div>';
     return`<div class="card"><div class="card-row"><div style="display:flex;align-items:center;gap:12px">${logo}<div><div class="card-title">${esc(c.name)}</div><div class="card-sub">${tplsFor(c.id).length} modèle(s) · ${peopleFor(c.id).length} collaborateur(s)</div></div></div><div style="display:flex;gap:6px"><button class="icon-btn" data-logo="${c.id}">🖼️</button><button class="icon-btn" data-rename="${c.id}">✏️</button>${S.data.companies.length>1?`<button class="icon-btn" data-delc="${c.id}">🗑️</button>`:''}</div></div></div>`;
@@ -706,7 +671,7 @@ function renderCompaniesList(){
 function openNewCompanyModal(){
   openModal(`<h3>Nouvelle société</h3>
     <div class="form-group"><label>Logo (optionnel)</label><div id="ncLP"></div><input type="file" id="ncLogo" accept="image/*"></div>
-    <div class="form-group"><label>Nom</label><input type="text" id="ncName" placeholder="ex: Filiale Espagne"></div>
+    <div class="form-group"><label>Nom</label><input type="text" id="ncName" placeholder="ex: ARC Properties SA"></div>
     <div class="form-group"><label><input type="checkbox" id="ncCopy" checked> Copier les modèles d'une société existante</label><select id="ncFrom">${S.data.companies.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
     <div class="form-actions"><button class="btn primary" id="ncSave">Créer</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
   let pLogo=null;
@@ -729,33 +694,21 @@ function openLogoModal(cId){
   const rm=document.getElementById('lRm');if(rm)rm.addEventListener('click',()=>{c.logoDataUrl=null;saveData();closeModal();renderAll();toast('Logo retiré');});
 }
 
-// ── EXPORT/IMPORT/RESET ───────────────────────────────────
+// ── EXPORT / IMPORT / RESET ───────────────────────────────
 function exportData(){const blob=new Blob([JSON.stringify(S.data,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=`cleverdesk-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);toast('Sauvegarde exportée');}
-function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.companies||!d.templates||!d.people)throw new Error();if(!confirm('Remplacer toutes les données actuelles ?'))return;S.data=d;saveData();S.companyId=d.companies[0]?.id||null;renderAll();switchTab('people');toast('Données importées');}catch{toast('Fichier invalide');}};r.readAsText(f);e.target.value='';}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.companies||!d.templates||!d.people)throw new Error();if(!confirm('Remplacer toutes les données ?'))return;S.data=d;saveData();S.companyId=d.companies[0]?.id||null;renderAll();switchTab('people');toast('Données importées');}catch{toast('Fichier invalide');}};r.readAsText(f);e.target.value='';}
 function resetAll(){if(!confirm('Supprimer définitivement toutes les données ?'))return;S.data=seedData();saveData();S.companyId=S.data.companies[0].id;switchTab('home');toast('Données réinitialisées');}
 
 // ── ⚡ BRIDGE: HR → SMARTTASK ────────────────────────────
 function pushToSmartTask(p,c){
   const now=new Date();
   if(!S.data.smarttasks)S.data.smarttasks=[];
-  // Remove existing tasks for this person (re-sync)
   S.data.smarttasks=S.data.smarttasks.filter(t=>t.personId!==p.id);
   const tasks=p.checklist.map(item=>{
     const dl=dueDate(p.refDate,item.offsetDays??0);
     const diff=Math.round((dl-now)/86400000);
-    let priority='low';
-    if(diff<0)priority='high';else if(diff<=3)priority='high';else if(diff<=10)priority='medium';
-    return{
-      id:uid(),title:item.text,
-      notes:`👤 ${p.name} · ${p.type==='onboarding'?'Onboarding':'Offboarding'} · ${c.name}`,
-      deadline:dl.toISOString(),
-      reminder:diff>1?'1440':'60',
-      priority,category:c.name,
-      done:item.checked||false,
-      source:p.type==='onboarding'?'hr_onboarding':'hr_offboarding',
-      personId:p.id,checklistItemId:item.id,
-      createdAt:new Date().toISOString()
-    };
+    let priority='low';if(diff<0)priority='high';else if(diff<=3)priority='high';else if(diff<=10)priority='medium';
+    return{id:uid(),title:item.text,notes:`👤 ${p.name} · ${p.type==='onboarding'?'Onboarding':'Offboarding'} · ${c.name}`,deadline:dl.toISOString(),reminder:diff>1?'1440':'60',priority,category:c.name,done:item.checked||false,source:p.type==='onboarding'?'hr_onboarding':'hr_offboarding',personId:p.id,checklistItemId:item.id,createdAt:new Date().toISOString()};
   });
   S.data.smarttasks.push(...tasks);
   saveData();scheduleReminders();updateStBadge();
@@ -765,10 +718,7 @@ function pushToSmartTask(p,c){
 // ── SMARTTASK ─────────────────────────────────────────────
 function bindStFilters(){
   document.querySelectorAll('[data-sf]').forEach(chip=>{
-    chip.addEventListener('click',()=>{
-      document.querySelectorAll('[data-sf]').forEach(c=>c.classList.remove('active'));
-      chip.classList.add('active');S.stFilter=chip.dataset.sf;renderStList();
-    });
+    chip.addEventListener('click',()=>{document.querySelectorAll('[data-sf]').forEach(c=>c.classList.remove('active'));chip.classList.add('active');S.stFilter=chip.dataset.sf;renderStList();});
   });
 }
 function renderST(){renderStStats();renderStList();}
@@ -780,8 +730,7 @@ function renderStStats(){
 }
 function renderStList(){
   const el=document.getElementById('stTaskList');if(!el)return;
-  const now=new Date();
-  let tasks=[...(S.data.smarttasks||[])];
+  const now=new Date();let tasks=[...(S.data.smarttasks||[])];
   tasks=tasks.filter(t=>{
     if(S.stFilter==='all')return!t.done;
     if(S.stFilter==='today')return t.deadline&&new Date(t.deadline).toDateString()===now.toDateString()&&!t.done;
@@ -821,9 +770,6 @@ function renderStList(){
     </div>`;
   }).join('');
 }
-function companySelect(sel){
-  return`<select id="stC"><option value="">— Aucune —</option>${S.data.companies.map(c=>`<option value="${esc(c.name)}"${c.name===sel?' selected':''}>${esc(c.name)}</option>`).join('')}</select>`;
-}
 function stFmtDl(dl,overdue,soon){
   const d=new Date(dl);const str=d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
   if(overdue)return`<span class="due-tag overdue">⚠️ Retard : ${str}</span>`;
@@ -839,8 +785,7 @@ function stToggle(taskId){
 function updateStBadge(){
   const now=new Date();
   const n=(S.data.smarttasks||[]).filter(t=>!t.done&&t.deadline&&(new Date(t.deadline)<now||(new Date(t.deadline)-now)<86400000)).length;
-  const btn=document.getElementById('stTabBtn');
-  if(btn)btn.textContent=n>0?`⚡ SmartTask (${n})`:'⚡ SmartTask';
+  const btn=document.getElementById('stTabBtn');if(btn)btn.textContent=n>0?`⚡ SmartTask (${n})`:'⚡ SmartTask';
 }
 function stOpenNew(){
   S.stEditId=null;S.stPriority='medium';
@@ -874,12 +819,13 @@ function stPrio(p){
 }
 function stSave(){
   const title=document.getElementById('stT')?.value.trim();if(!title)return toast('Indique un titre');
-  const dl=document.getElementById('stD')?.value;
+  const dl=document.getElementById('stD')?.value;const editId=S.stEditId;
   if(!S.data.smarttasks)S.data.smarttasks=[];
-  const task={id:S.stEditId||uid(),title,notes:document.getElementById('stN')?.value.trim()||'',deadline:dl?new Date(dl).toISOString():null,reminder:document.getElementById('stR')?.value||'',priority:S.stPriority,category:document.getElementById('stC')?.value.trim()||'',done:false,source:'manual',createdAt:new Date().toISOString()};
-  if(S.stEditId){const idx=S.data.smarttasks.findIndex(t=>t.id===S.stEditId);if(idx>=0){const old=S.data.smarttasks[idx];task.done=old.done;task.source=old.source;task.personId=old.personId;task.checklistItemId=old.checklistItemId;S.data.smarttasks[idx]=task;}}
+  const task={id:editId||uid(),title,notes:document.getElementById('stN')?.value.trim()||'',deadline:dl?new Date(dl).toISOString():null,reminder:document.getElementById('stR')?.value||'',priority:S.stPriority,category:document.getElementById('stC')?.value||'',done:false,source:'manual',createdAt:new Date().toISOString()};
+  if(editId){const idx=S.data.smarttasks.findIndex(t=>t.id===editId);if(idx>=0){const old=S.data.smarttasks[idx];task.done=old.done;task.source=old.source;task.personId=old.personId;task.checklistItemId=old.checklistItemId;S.data.smarttasks[idx]=task;}}
   else S.data.smarttasks.unshift(task);
-  saveData();closeModal();renderST();scheduleReminders();updateStBadge();toast(S.stEditId?'✅ Tâche mise à jour':'✅ Tâche créée');
+  saveData();closeModal();renderST();scheduleReminders();updateStBadge();
+  toast(editId?'✅ Tâche mise à jour':'✅ Tâche créée');
 }
 function stDelete(tId){
   if(!confirm('Supprimer cette tâche ?'))return;
@@ -890,9 +836,9 @@ function stDelete(tId){
 // ── AI IMPORT ─────────────────────────────────────────────
 function stOpenAiImport(){
   openModal(`<h3>🤖 Importer des tâches via IA</h3>
-    <p class="hint">Colle un email, un message WhatsApp ou n'importe quel texte — l'IA en extrait les tâches, deadlines et priorités automatiquement.</p>
-    <div class="form-group"><label>Source</label><select id="aiSrc"><option value="email">📧 Email</option><option value="whatsapp">💬 WhatsApp Business</option><option value="autre">📝 Autre texte</option></select></div>
-    <div class="form-group"><label>Texte à analyser</label><textarea id="aiTxt" style="min-height:110px" placeholder="Colle ton email ou message ici...&#10;&#10;Ex: 'Bonjour, merci d'envoyer le rapport Q3 avant vendredi et de planifier un appel lundi à 14h.'"></textarea></div>
+    <p class="hint">Colle un email ou message WhatsApp — l'IA extrait les tâches, deadlines et priorités automatiquement.</p>
+    <div class="form-group"><label>Source</label><select id="aiSrc"><option value="email">📧 Email</option><option value="whatsapp">💬 WhatsApp Business</option><option value="autre">📝 Autre</option></select></div>
+    <div class="form-group"><label>Texte à analyser</label><textarea id="aiTxt" style="min-height:110px" placeholder="Colle ton email ou message ici..."></textarea></div>
     <div id="aiRes"></div>
     <div class="form-actions"><button class="btn primary" id="aiBtn" onclick="runAI()">✨ Extraire les tâches</button><button class="btn secondary" onclick="closeModal()">Annuler</button></div>`);
 }
@@ -912,7 +858,7 @@ async function runAI(){
     window._aiEx=extracted.map(t=>({...t,source:src}));
     const pc={high:'var(--red)',medium:'var(--orange)',low:'var(--green)'};
     res.innerHTML=`<p style="font-weight:600;margin:14px 0 8px">${extracted.length} tâche(s) trouvée(s) :</p>
-      ${extracted.map((t,i)=>`<div class="card" style="margin-bottom:8px;border-left:4px solid ${pc[t.priority]||'var(--tx2)'}"><div class="card-title">${esc(t.title)}</div>${t.notes?`<div class="card-sub">${esc(t.notes)}</div>`:''}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${t.deadline?`<span class="due-tag ok">📅 ${new Date(t.deadline).toLocaleDateString('fr-FR')}</span>`:''}<span class="badge ${t.priority==='high'?'offboarding':t.priority==='medium'?'payroll':'onboarding'}">${t.priority==='high'?'Haute':t.priority==='medium'?'Moyenne':'Basse'}</span></div><button class="btn secondary small" style="margin-top:8px" onclick="aiAdd(${i})">+ Ajouter</button></div>`).join('')}
+      ${extracted.map((t,i)=>`<div class="card" style="margin-bottom:8px;border-left:4px solid ${pc[t.priority]||'var(--tx2)'}"><div class="card-title">${esc(t.title)}</div>${t.notes?`<div class="card-sub">${esc(t.notes)}</div>`:''}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${t.deadline?`<span class="due-tag ok">📅 ${new Date(t.deadline).toLocaleDateString('fr-FR')}</span>`:''}</div><button class="btn secondary small" style="margin-top:8px" onclick="aiAdd(${i})">+ Ajouter</button></div>`).join('')}
       <button class="btn primary" style="width:100%;margin-top:4px" onclick="aiAddAll()">+ Ajouter toutes les tâches</button>`;
   }catch(e){res.innerHTML='<p class="hint" style="color:var(--red);text-align:center">Erreur lors de l\'analyse. Réessaie.</p>';console.error(e);}
   finally{if(btn)btn.disabled=false;}
@@ -929,9 +875,9 @@ function aiAddAll(){
   saveData();closeModal();renderST();updateStBadge();toast(`✅ ${tasks.length} tâches ajoutées`);
 }
 
-// ── PUSH NOTIFICATIONS ────────────────────────────────────
+// ── NOTIFICATIONS ─────────────────────────────────────────
 async function requestNotif(){
-  if(!('Notification'in window))return toast('Notifications non supportées dans ce navigateur');
+  if(!('Notification'in window))return toast('Notifications non supportées');
   const p=await Notification.requestPermission();
   if(p==='granted'){S.data.settings.notif=true;saveData();scheduleReminders();new Notification('⚡ SmartTask activé',{body:'Tu recevras des rappels pour tes tâches !'});toast('🔔 Notifications activées !');}
   else toast('Notifications refusées. Active-les dans les paramètres du navigateur.');
@@ -949,18 +895,16 @@ function scheduleReminders(){
 function bindAuthScreen(){
   const errEl=document.getElementById('authError');
   const show=msg=>{if(errEl)errEl.textContent=msg;};
-
   document.getElementById('authLoginBtn').addEventListener('click',()=>{
     const email=document.getElementById('authEmail').value.trim();
     const pass=document.getElementById('authPassword').value;
     if(!email||!pass)return show('Indique un email et un mot de passe');
     show('Connexion en cours…');
-    const timer=setTimeout(()=>show('⚠️ Délai dépassé. Firebase est peut-être bloqué dans ce navigateur — utilise le mode local ci-dessous.'),7000);
+    const timer=setTimeout(()=>show('⚠️ Délai dépassé. Utilise le mode local ci-dessous ou vérifie ta connexion.'),7000);
     firebase.auth().signInWithEmailAndPassword(email,pass)
       .then(()=>clearTimeout(timer))
       .catch(x=>{clearTimeout(timer);show(authErr(x));});
   });
-
   document.getElementById('authSignupBtn').addEventListener('click',()=>{
     const email=document.getElementById('authEmail').value.trim();
     const pass=document.getElementById('authPassword').value;
@@ -972,14 +916,13 @@ function bindAuthScreen(){
       .then(()=>clearTimeout(timer))
       .catch(x=>{clearTimeout(timer);show(authErr(x));});
   });
-
   document.getElementById('authLocalBtn').addEventListener('click',()=>{
     document.getElementById('authScreen').style.display='none';
     startApp();
   });
 }
-function authErr(e){const m={'auth/invalid-email':'Email invalide','auth/user-not-found':'Aucun compte avec cet email','auth/wrong-password':'Mot de passe incorrect','auth/email-already-in-use':'Un compte existe déjà avec cet email','auth/weak-password':'Mot de passe trop faible','auth/invalid-credential':'Email ou mot de passe incorrect'};return m[e.code]||e.message;}
-function bindLogoutButton(){const b=document.getElementById('btnLogout');if(b)b.addEventListener('click',()=>firebase.auth().signOut());}
+function authErr(e){const m={'auth/invalid-email':'Email invalide','auth/user-not-found':'Aucun compte avec cet email','auth/wrong-password':'Mot de passe incorrect','auth/email-already-in-use':'Un compte existe déjà avec cet email','auth/weak-password':'Mot de passe trop faible','auth/invalid-credential':'Email ou mot de passe incorrect','auth/unauthorized-domain':'Domaine non autorisé — utilise le mode local ou déploie sur Netlify'};return m[e.code]||e.message;}
+
 function initAuth(){
   if(typeof firebase==='undefined'){startApp();return;}
   bindAuthScreen();
